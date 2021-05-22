@@ -1,19 +1,16 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_shortcuts/src/platform/flutter_shortcuts_platform.dart';
 import 'package:flutter_shortcuts/src/types/types.dart';
 
-class FlutterShortcuts {
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_shortcuts');
+export 'package:flutter_shortcuts/src/types/types.dart';
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+class FlutterShortcuts {
+  Future<void> initialize(FlutterShortcutAction action) async {
+    FlutterShortcutsPlatform.instance.initialize(action);
   }
 
-  Future<void> initialize(FlutterShortcutsHandler handler) async {
-    FlutterShortcutsPlatform.instance.initialize(handler);
+  Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
+    return FlutterShortcutsPlatform.instance.setShortcutItems(items);
   }
 }

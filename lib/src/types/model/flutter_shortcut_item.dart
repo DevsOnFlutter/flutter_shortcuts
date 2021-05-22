@@ -1,11 +1,11 @@
 class FlutterShortcutItem {
   const FlutterShortcutItem({
-    this.type,
+    this.action,
     this.title,
     this.icon,
   });
 
-  final String type;
+  final String action;
 
   final String title;
 

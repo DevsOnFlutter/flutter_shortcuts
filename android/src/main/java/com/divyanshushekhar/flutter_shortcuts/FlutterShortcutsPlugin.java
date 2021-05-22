@@ -1,39 +1,71 @@
 package com.divyanshushekhar.flutter_shortcuts;
 
+import android.app.Activity;
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.MethodCall;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** FlutterShortcutsPlugin */
-public class FlutterShortcutsPlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
+public class FlutterShortcutsPlugin implements FlutterPlugin, ActivityAware {
+  private static final String CHANNEL_ID = "com.divyanshushekhar.flutter_shortcuts";
+
+  public static String getChannelId() {
+    return CHANNEL_ID;
+  }
+
   private MethodChannel channel;
+  private MethodCallImplementation handler;
 
-  @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_shortcuts");
-    channel.setMethodCallHandler(this);
+  @SuppressWarnings("deprecation")
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final FlutterShortcutsPlugin plugin = new FlutterShortcutsPlugin();
+    plugin.setupChannel(registrar.messenger(), registrar.context(), registrar.activity());
   }
 
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else {
-      result.notImplemented();
-    }
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    setupChannel(binding.getBinaryMessenger(), binding.getApplicationContext(), null);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    teardownChannel();
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    handler.setActivity(binding.getActivity());
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    handler.setActivity(null);
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    onAttachedToActivity(binding);
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    onDetachedFromActivity();
+  }
+
+  private void setupChannel(BinaryMessenger messenger, Context context, Activity activity) {
+    channel = new MethodChannel(messenger, CHANNEL_ID);
+    handler = new MethodCallImplementation(context, activity);
+    channel.setMethodCallHandler(handler);
+  }
+
+  private void teardownChannel() {
     channel.setMethodCallHandler(null);
+    channel = null;
+    handler = null;
   }
 }
