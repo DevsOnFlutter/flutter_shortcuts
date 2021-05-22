@@ -46,16 +46,31 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         switch (call.method) {
             case "setShortcutItems":
-                List<Map<String, String>> arg = call.arguments();
-                List<ShortcutInfo> shortcuts = processShortcuts(arg);
+                List<Map<String, String>> setShortcutItemsArgs = call.arguments();
+                List<ShortcutInfo> shortcuts = processShortcuts(setShortcutItemsArgs);
                 shortcutManager.setDynamicShortcuts(shortcuts);
                 Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
                 break;
-            case "updateShortcutItems":
-                List<Map<String, String>> updateShortcutArgs = call.arguments();
-                List<ShortcutInfo> updateShortcuts = processShortcuts(updateShortcutArgs);
+            case "updateAllShortcutItems":
+                List<Map<String, String>> updateAllShortcutArgs = call.arguments();
+                List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
                 boolean updated = shortcutManager.updateShortcuts(updateShortcuts);
                 Toast.makeText(context, "Shortcut Updated: " + updated, Toast.LENGTH_SHORT).show();
+                break;
+            case "updateShortcutItem":
+                final List<Map<String, String>> updateShortcutItemArgs = call.arguments();
+                Map<String, String> info = updateShortcutItemArgs.get(0);
+                List<ShortcutInfo> previousDynamicShortcuts = shortcutManager.getDynamicShortcuts();
+                final List<ShortcutInfo> shortcutList = new ArrayList<>();
+                for(ShortcutInfo si : previousDynamicShortcuts) {
+                    if(si.getId().equalsIgnoreCase(info.get("id")))  {
+                        ShortcutInfo shortcutInfo = createShortcutInfo(info);
+                        shortcutList.add(shortcutInfo);
+                        continue;
+                    }
+                    shortcutList.add(si);
+                }
+                shortcutManager.updateShortcuts(shortcutList);
                 break;
             case "clearShortcutItems":
                 shortcutManager.removeAllDynamicShortcuts();
@@ -84,32 +99,41 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    @TargetApi(Build.VERSION_CODES.N_MR1)
     private List<ShortcutInfo> processShortcuts(List<Map<String, String>> shortcuts) {
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
 
         for (Map<String, String> shortcut : shortcuts) {
-            final String id = shortcut.get("id");
-            final String icon = shortcut.get("icon");
-            final String action = shortcut.get("action");
-            final String title = shortcut.get("title");
-            final ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(context, id);
-
-            final int resourceId = loadResourceId(context, icon);
-            final Intent intent = getIntentToOpenMainActivity(action);
-
-            if (resourceId > 0) {
-                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
-            }
-
-            final ShortcutInfo shortcutInfo = shortcutBuilder
-                    .setLongLabel(title)
-                    .setShortLabel(title)
-                    .setIntent(intent)
-                    .build();
+            ShortcutInfo shortcutInfo = createShortcutInfo(shortcut);
             shortcutList.add(shortcutInfo);
         }
         return shortcutList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private ShortcutInfo createShortcutInfo(Map<String, String> shortcut) {
+        final String id = shortcut.get("id");
+        final String icon = shortcut.get("icon");
+        final String action = shortcut.get("action");
+        final String title = shortcut.get("title");
+        final ShortcutInfo.Builder shortcutBuilder;
+
+            shortcutBuilder = new ShortcutInfo.Builder(context, id);
+
+
+        final int resourceId = loadResourceId(context, icon);
+        final Intent intent = getIntentToOpenMainActivity(action);
+
+        if (resourceId > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
+            }
+        }
+
+        return shortcutBuilder
+                .setLongLabel(title)
+                .setShortLabel(title)
+                .setIntent(intent)
+                .build();
     }
 
     private int loadResourceId(Context context, String icon) {

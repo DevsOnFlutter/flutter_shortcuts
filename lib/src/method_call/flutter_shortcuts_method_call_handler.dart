@@ -36,7 +36,14 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
-    await channel.invokeMethod<void>('updateShortcutItems', itemsList);
+    await channel.invokeMethod<void>('updateAllShortcutItems', itemsList);
+  }
+
+  @override
+  Future<void> updateShortcutItem(
+      String id, FlutterShortcutItem shortcut) async {
+    final Map<String, String> item = _serializeItem(shortcut);
+    await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }
 
   Map<String, String> _serializeItem(FlutterShortcutItem item) {

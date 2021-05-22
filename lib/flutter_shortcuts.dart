@@ -27,8 +27,10 @@ class FlutterShortcuts {
   }
 
   /// updateShortcutItems() will update a single shortcut item based on id.
-  Future<void> updateShortcutItem(
+  Future<void> updateShortcutItem({
     String id,
     FlutterShortcutItem shortcut,
-  ) async {}
+  }) async {
+    return FlutterShortcutsPlatform.instance.updateShortcutItem(id, shortcut);
+  }
 }
