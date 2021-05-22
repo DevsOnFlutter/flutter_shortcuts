@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,31 +47,16 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         switch (call.method) {
             case "setShortcutItems":
-                List<Map<String, String>> setShortcutItemsArgs = call.arguments();
-                List<ShortcutInfo> shortcuts = processShortcuts(setShortcutItemsArgs);
-                shortcutManager.setDynamicShortcuts(shortcuts);
-                Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
+                setShortcutItems(call,shortcutManager);
                 break;
             case "updateAllShortcutItems":
-                List<Map<String, String>> updateAllShortcutArgs = call.arguments();
-                List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
-                boolean updated = shortcutManager.updateShortcuts(updateShortcuts);
-                Toast.makeText(context, "Shortcut Updated: " + updated, Toast.LENGTH_SHORT).show();
+                updateAllShortcutItems(call,shortcutManager);
                 break;
             case "updateShortcutItem":
-                final List<Map<String, String>> updateShortcutItemArgs = call.arguments();
-                Map<String, String> info = updateShortcutItemArgs.get(0);
-                List<ShortcutInfo> previousDynamicShortcuts = shortcutManager.getDynamicShortcuts();
-                final List<ShortcutInfo> shortcutList = new ArrayList<>();
-                for(ShortcutInfo si : previousDynamicShortcuts) {
-                    if(si.getId().equalsIgnoreCase(info.get("id")))  {
-                        ShortcutInfo shortcutInfo = createShortcutInfo(info);
-                        shortcutList.add(shortcutInfo);
-                        continue;
-                    }
-                    shortcutList.add(si);
-                }
-                shortcutManager.updateShortcuts(shortcutList);
+                updateShortcutItem(call,shortcutManager);
+                break;
+            case "changeShortcutItemIcon":
+                changeShortcutItemIcon(call,shortcutManager);
                 break;
             case "clearShortcutItems":
                 shortcutManager.removeAllDynamicShortcuts();
@@ -98,6 +84,76 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         result.success(null);
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void setShortcutItems(MethodCall call,ShortcutManager shortcutManager) {
+        List<Map<String, String>> setShortcutItemsArgs = call.arguments();
+        List<ShortcutInfo> shortcuts = processShortcuts(setShortcutItemsArgs);
+        shortcutManager.setDynamicShortcuts(shortcuts);
+        Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void updateAllShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
+        List<Map<String, String>> updateAllShortcutArgs = call.arguments();
+        List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
+        boolean updated = shortcutManager.updateShortcuts(updateShortcuts);
+        Toast.makeText(context, "Shortcut Updated: " + updated, Toast.LENGTH_SHORT).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void updateShortcutItem(MethodCall call, ShortcutManager shortcutManager) {
+        final List<Map<String, String>> args = call.arguments();
+        Map<String, String> info = args.get(0);
+        List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+        final List<ShortcutInfo> shortcutList = new ArrayList<>();
+        for(ShortcutInfo si : dynamicShortcuts) {
+            if(si.getId().equalsIgnoreCase(info.get("id")))  {
+                ShortcutInfo shortcutInfo = createShortcutInfo(info);
+                shortcutList.add(shortcutInfo);
+                continue;
+            }
+            shortcutList.add(si);
+        }
+        shortcutManager.updateShortcuts(shortcutList);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void changeShortcutItemIcon(MethodCall call, ShortcutManager shortcutManager) {
+        final List<String> args = call.arguments();
+        final String refId = args.get(0);
+        final String changeIcon = args.get(1);
+        Map<String,String> items = deserializeShortcutInfoAtId(refId,changeIcon,shortcutManager);
+        ShortcutInfo shortcutInfo = createShortcutInfo(items);
+        List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+        final List<ShortcutInfo> shortcutList = new ArrayList<>();
+        for(ShortcutInfo si : dynamicShortcuts) {
+            if(si.getId().equalsIgnoreCase(refId))  {
+                shortcutList.add(shortcutInfo);
+                continue;
+            }
+            shortcutList.add(si);
+        }
+        shortcutManager.updateShortcuts(shortcutList);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private Map<String,String> deserializeShortcutInfoAtId(String id, String icon, ShortcutManager shortcutManager) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+
+        for(ShortcutInfo si : dynamicShortcuts) {
+            if(si.getId().equalsIgnoreCase(id))  {
+                map.put("id", si.getId());
+                map.put("title", String.valueOf(si.getShortLabel()));
+                map.put("icon", icon);
+                map.put("action",si.getIntent().getStringExtra(EXTRA_ACTION));
+            }
+        }
+        return map;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private List<ShortcutInfo> processShortcuts(List<Map<String, String>> shortcuts) {
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
@@ -116,9 +172,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final String action = shortcut.get("action");
         final String title = shortcut.get("title");
         final ShortcutInfo.Builder shortcutBuilder;
-
-            shortcutBuilder = new ShortcutInfo.Builder(context, id);
-
+        shortcutBuilder = new ShortcutInfo.Builder(context, id);
 
         final int resourceId = loadResourceId(context, icon);
         final Intent intent = getIntentToOpenMainActivity(action);

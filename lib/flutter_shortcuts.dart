@@ -33,4 +33,8 @@ class FlutterShortcuts {
   }) async {
     return FlutterShortcutsPlatform.instance.updateShortcutItem(id, shortcut);
   }
+
+  Future<void> changeShortcutItemIcon({String id, String icon}) async {
+    return FlutterShortcutsPlatform.instance.changeShortcutItemIcon(id, icon);
+  }
 }

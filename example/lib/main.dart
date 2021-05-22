@@ -117,7 +117,8 @@ class _MyAppState extends State<MyApp> {
             ElevatedButton(
               child: Text("Change icon of 2nd Shortcut"),
               onPressed: () {
-                // flutterShortcuts.updateShortcutItemIcon(id, icon);
+                flutterShortcuts.changeShortcutItemIcon(
+                    id: "2", icon: "bookmark_icon");
               },
             ),
             ElevatedButton(
