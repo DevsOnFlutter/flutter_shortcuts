@@ -13,4 +13,22 @@ class FlutterShortcuts {
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
     return FlutterShortcutsPlatform.instance.setShortcutItems(items);
   }
+
+  Future<void> clearShortcutItems() async {
+    return FlutterShortcutsPlatform.instance.clearShortcutItems();
+  }
+
+  /// updateShortcutItems() will update all the shortcut items.
+  Future<void> updateAllShortcutItems({
+    List<FlutterShortcutItem> shortcutList,
+  }) async {
+    return FlutterShortcutsPlatform.instance
+        .updateAllShortcutItems(shortcutList);
+  }
+
+  /// updateShortcutItems() will update a single shortcut item based on id.
+  Future<void> updateShortcutItem(
+    String id,
+    FlutterShortcutItem shortcut,
+  ) async {}
 }

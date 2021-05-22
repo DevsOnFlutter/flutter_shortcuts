@@ -9,6 +9,7 @@ import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -48,6 +49,13 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 List<Map<String, String>> arg = call.arguments();
                 List<ShortcutInfo> shortcuts = processShortcuts(arg);
                 shortcutManager.setDynamicShortcuts(shortcuts);
+                Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
+                break;
+            case "updateShortcutItems":
+                List<Map<String, String>> updateShortcutArgs = call.arguments();
+                List<ShortcutInfo> updateShortcuts = processShortcuts(updateShortcutArgs);
+                boolean updated = shortcutManager.updateShortcuts(updateShortcuts);
+                Toast.makeText(context, "Shortcut Updated: " + updated, Toast.LENGTH_SHORT).show();
                 break;
             case "clearShortcutItems":
                 shortcutManager.removeAllDynamicShortcuts();
@@ -81,10 +89,11 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
 
         for (Map<String, String> shortcut : shortcuts) {
+            final String id = shortcut.get("id");
             final String icon = shortcut.get("icon");
             final String action = shortcut.get("action");
             final String title = shortcut.get("title");
-            final ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(context, action);
+            final ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(context, id);
 
             final int resourceId = loadResourceId(context, icon);
             final Intent intent = getIntentToOpenMainActivity(action);

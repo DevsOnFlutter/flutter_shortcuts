@@ -10,7 +10,6 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
 
   @override
   Future<void> initialize(FlutterShortcutAction actionHandler) async {
-    // super.initialize(action);
     channel.setMethodCallHandler((MethodCall call) async {
       assert(call.method == 'launch');
       actionHandler(call.arguments);
@@ -23,14 +22,26 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
 
   @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
-    // super.setShortcutItems(items);
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
     await channel.invokeMethod<void>('setShortcutItems', itemsList);
   }
 
+  @override
+  Future<void> clearShortcutItems() async {
+    await channel.invokeMethod<void>('clearShortcutItems');
+  }
+
+  @override
+  Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {
+    final List<Map<String, String>> itemsList =
+        items.map(_serializeItem).toList();
+    await channel.invokeMethod<void>('updateShortcutItems', itemsList);
+  }
+
   Map<String, String> _serializeItem(FlutterShortcutItem item) {
     return <String, String>{
+      'id': item.id,
       'action': item.action,
       'title': item.title,
       'icon': item.icon,
