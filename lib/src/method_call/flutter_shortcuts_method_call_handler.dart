@@ -9,16 +9,15 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   MethodChannel get channel => _channel;
 
   @override
-  Future<void> initialize(FlutterShortcutAction action) async {
+  Future<void> initialize(FlutterShortcutAction actionHandler) async {
     // super.initialize(action);
     channel.setMethodCallHandler((MethodCall call) async {
       assert(call.method == 'launch');
-      action(call.arguments);
+      actionHandler(call.arguments);
     });
-    final String actions =
-        await channel.invokeMethod<String>('getLaunchAction');
+    final String action = await channel.invokeMethod<String>('getLaunchAction');
     if (action != null) {
-      action(actions);
+      actionHandler(action);
     }
   }
 

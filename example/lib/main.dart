@@ -11,16 +11,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String action = '';
+  String action = 'No Action';
 
   @override
   void initState() {
     super.initState();
     final FlutterShortcuts flutterShortcuts = FlutterShortcuts();
-    flutterShortcuts.initialize((String action) {
+    flutterShortcuts.initialize((String incomingAction) {
       setState(() {
-        if (action != null) {
-          action = action;
+        if (incomingAction != null) {
+          action = incomingAction;
         }
       });
     });
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       ),
     ]).then((value) {
       setState(() {
-        if (action == '') {
+        if (action == 'No Action') {
           action = 'Flutter Shortcuts Ready';
         }
       });
