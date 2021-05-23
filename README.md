@@ -10,7 +10,7 @@
 
 ## Demo
 
-<img src="https://i.imgur.com/BXQJXmW.gif"/>
+<img src="https://i.imgur.com/IRUaepd.gif"/>
 
 ## Quick Start
 
