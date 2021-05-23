@@ -8,6 +8,10 @@
 
 [![GitHub followers](https://img.shields.io/github/followers/divshekhar.svg?style=social&label=Follow)](https://github.com/divshekhar/)
 
+## Demo
+
+<img src="https://i.imgur.com/BXQJXmW.gif"/>
+
 ## Quick Start
 
 ### Step 1: Include plugin to your project
