@@ -1,5 +1,15 @@
+/* 
+
+              Copyright (c) 2021 divshekhar (Divyanshu Shekhar). 
+                            All rights reserved.
+
+The plugin is governed by the BSD-3-clause License. Please see the LICENSE file
+for more details.
+
+*/
+
 import 'package:flutter_shortcuts/src/method_call/flutter_shortcuts_method_call_handler.dart';
-import 'package:flutter_shortcuts/src/types/types.dart';
+import 'package:flutter_shortcuts/src/helper/helper.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class FlutterShortcutsPlatform extends PlatformInterface {
@@ -28,6 +38,10 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
 
   Future<void> clearShortcutItems() async {
     throw UnimplementedError("clearShortcutItems() has not been implemented.");
+  }
+
+  Future<void> pushShortcutItem(FlutterShortcutItem shortcut) async {
+    throw UnimplementedError("pushShortcutItem() has not been implemented.");
   }
 
   Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {

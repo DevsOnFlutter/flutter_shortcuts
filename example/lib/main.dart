@@ -25,16 +25,6 @@ class _MyAppState extends State<MyApp> {
         }
       });
     });
-
-    /*
-      flutterShortcuts.staticShortcutsInitialize((String id) {
-        if(id == 'Homepage') {
-          Navigator.pushNamed(context, '/Homepage');
-        } else if(id == 'Secondpage') {
-          Navigator.pushNamed(context, '/Secondpage');
-        }
-      }); 
-    */
   }
 
   @override
@@ -52,20 +42,22 @@ class _MyAppState extends State<MyApp> {
             ElevatedButton(
               child: Text("Set Shortcuts"),
               onPressed: () async {
-                await flutterShortcuts.setShortcutItems(<FlutterShortcutItem>[
-                  const FlutterShortcutItem(
-                    id: "1",
-                    action: 'Homepage',
-                    title: 'Play Ludo',
-                    icon: 'ic_launcher',
-                  ),
-                  const FlutterShortcutItem(
-                    id: "2",
-                    action: 'Secondpage',
-                    title: 'Play Snake Ladder',
-                    icon: 'ic_launcher',
-                  ),
-                ]).then((value) {
+                await flutterShortcuts.setShortcutItems(
+                  shortcutItems: <FlutterShortcutItem>[
+                    const FlutterShortcutItem(
+                      id: "1",
+                      action: 'Homepage',
+                      shortLabel: 'Play Ludo',
+                      icon: 'ic_launcher',
+                    ),
+                    const FlutterShortcutItem(
+                      id: "2",
+                      action: 'Secondpage',
+                      shortLabel: 'Play Snake Ladder',
+                      icon: 'ic_launcher',
+                    ),
+                  ],
+                ).then((value) {
                   setState(() {
                     if (action == 'No Action') {
                       action = 'Flutter Shortcuts Ready';
@@ -81,6 +73,18 @@ class _MyAppState extends State<MyApp> {
               },
             ),
             ElevatedButton(
+              child: Text("push Shortcut Item"),
+              onPressed: () async {
+                await flutterShortcuts.pushShortcutItem(
+                  shortcut: FlutterShortcutItem(
+                    id: "5",
+                    action: "fifthaction",
+                    shortLabel: "shortLabel",
+                  ),
+                );
+              },
+            ),
+            ElevatedButton(
               child: Text("Update all shortcuts"),
               onPressed: () async {
                 await flutterShortcuts
@@ -88,13 +92,13 @@ class _MyAppState extends State<MyApp> {
                   const FlutterShortcutItem(
                     id: "1",
                     action: 'Homepage',
-                    title: 'Home Page 1',
+                    shortLabel: 'Home Page 1',
                     icon: 'ic_launcher',
                   ),
                   const FlutterShortcutItem(
                     id: "2",
                     action: 'Secondpage',
-                    title: 'Second Page 1',
+                    shortLabel: 'Second Page 1',
                     icon: 'ic_launcher',
                   ),
                 ]);
@@ -108,7 +112,7 @@ class _MyAppState extends State<MyApp> {
                   shortcut: FlutterShortcutItem(
                     id: "1",
                     action: 'Fourthpage',
-                    title: 'Fourth Page 4',
+                    shortLabel: 'Fourth Page 4',
                     icon: 'ic_launcher',
                   ),
                 );

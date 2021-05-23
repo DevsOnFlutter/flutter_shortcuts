@@ -1,6 +1,16 @@
+/* 
+
+            Copyright (c) 2021 divshekhar (Divyanshu Shekhar).
+                          All rights reserved.
+
+The plugin is governed by the BSD-3-clause License. Please see the LICENSE file
+for more details.
+
+*/
+
 import 'package:flutter/services.dart';
 import 'package:flutter_shortcuts/src/platform/flutter_shortcuts_platform.dart';
-import 'package:flutter_shortcuts/src/types/types.dart';
+import 'package:flutter_shortcuts/src/helper/helper.dart';
 
 class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   final MethodChannel _channel =
@@ -33,6 +43,12 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
+  Future<void> pushShortcutItem(FlutterShortcutItem shortcut) async {
+    final Map<String, String> item = _serializeItem(shortcut);
+    await channel.invokeMethod<void>('pushShortcutItem', [item]);
+  }
+
+  @override
   Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
@@ -55,7 +71,8 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     return <String, String>{
       'id': item.id,
       'action': item.action,
-      'title': item.title,
+      'shortLabel': item.shortLabel,
+      'longLabel': item.longLabel,
       'icon': item.icon,
     };
   }
