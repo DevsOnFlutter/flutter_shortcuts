@@ -13,16 +13,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String action = 'No Action';
   final FlutterShortcuts flutterShortcuts = FlutterShortcuts();
-  int maxLimit;
+  int? maxLimit;
 
   @override
   void initState() {
     super.initState();
     flutterShortcuts.initialize((String incomingAction) {
       setState(() {
-        if (incomingAction != null) {
-          action = incomingAction;
-        }
+        action = incomingAction;
       });
     });
   }
@@ -59,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                     ElevatedButton(
                       child: Text("Get Max Shortcut Limit"),
                       onPressed: () async {
-                        int result =
+                        int? result =
                             await flutterShortcuts.getMaxShortcutLimit();
                         setState(() {
                           maxLimit = result;

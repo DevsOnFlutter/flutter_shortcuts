@@ -8,13 +8,11 @@ for more details.
 
 */
 
-import 'package:flutter/material.dart';
-
 class FlutterShortcutItem {
   const FlutterShortcutItem({
-    @required this.id,
-    @required this.action,
-    @required this.shortLabel,
+    required this.id,
+    required this.action,
+    required this.shortLabel,
     this.longLabel,
     this.icon,
   });
@@ -29,8 +27,8 @@ class FlutterShortcutItem {
   final String shortLabel;
 
   // Long label of the shortcut
-  final String longLabel;
+  final String? longLabel;
 
   // Icon of the shortcut
-  final String icon;
+  final String? icon;
 }

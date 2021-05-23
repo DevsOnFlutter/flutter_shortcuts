@@ -32,7 +32,7 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("initialize() has not been implemented.");
   }
 
-  Future<int> getMaxShortcutLimit() {
+  Future<int?> getMaxShortcutLimit() {
     throw UnimplementedError("getMaxShortcutLimit() has not been implemented.");
   }
 
