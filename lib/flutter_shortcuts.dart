@@ -27,11 +27,11 @@ class FlutterShortcuts {
     return FlutterShortcutsPlatform.instance.getMaxShortcutLimit();
   }
 
-  /// [getIconProperties] returns the "maxHeight" and "maxWidth" of the shortcut icon.
-  /// Example: {"maxHeight": 250, "maxWidth": 200}
-  Future<Map<String, int>> getIconProperties() {
-    return FlutterShortcutsPlatform.instance.getIconProperties();
-  }
+  // /// [getIconProperties] returns the "maxHeight" and "maxWidth" of the shortcut icon.
+  // /// Example: {"maxHeight": 250, "maxWidth": 200}
+  // Future<Map<String, int>> getIconProperties() {
+  //   return FlutterShortcutsPlatform.instance.getIconProperties();
+  // }
 
   /// [setShortcutItems] will set all the shortcut items.
   Future<void> setShortcutItems(
@@ -53,9 +53,9 @@ class FlutterShortcuts {
 
   /// [addShortcutItems] updates dynamic or pinned shortcuts with same IDs
   /// and pushes new shortcuts with different IDs.
-  Future<void> addShortcutItems(
+  Future<void> pushShortcutItems(
       {List<FlutterShortcutItem> shortcutList}) async {
-    return FlutterShortcutsPlatform.instance.addShortcutItems(shortcutList);
+    return FlutterShortcutsPlatform.instance.pushShortcutItems(shortcutList);
   }
 
   /// [updateShortcutItems] updates shortcut items.
@@ -71,6 +71,18 @@ class FlutterShortcuts {
       {String id, FlutterShortcutItem shortcut}) async {
     return FlutterShortcutsPlatform.instance.updateShortcutItem(id, shortcut);
   }
+
+  // /// [updateShortLabel] updates short label of the shortcut item based on id.
+  // /// If the ID of the shortcut is not same, no changes will be reflected.
+  // Future<void> updateShortLabel({String id, String shortLabel}) async {
+  //   return FlutterShortcutsPlatform.instance.updateShortLabel(id, shortLabel);
+  // }
+
+  // /// [updateLongLabel] updates long label of the shortcut item based on id.
+  // /// If the ID of the shortcut is not same, no changes will be reflected.
+  // Future<void> updateLongLabel({String id, String longLabel}) async {
+  //   return FlutterShortcutsPlatform.instance.updateLongLabel(id, longLabel);
+  // }
 
   /// [changeShortcutItemIcon] will change the icon of the shortcut based on id.
   /// If the ID of the shortcut is not same, no changes will be reflected.

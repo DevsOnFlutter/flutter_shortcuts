@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String action = 'No Action';
   final FlutterShortcuts flutterShortcuts = FlutterShortcuts();
+  int maxLimit;
 
   @override
   void initState() {
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                 ),
-                Text("Flutter Shortcuts Max Limit"),
+                Text(
+                    "Flutter Shortcuts Max Limit -> ${maxLimit == null ? '' : maxLimit}"),
                 Row(
                   children: [
                     ElevatedButton(
@@ -60,7 +62,9 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         int result =
                             await flutterShortcuts.getMaxShortcutLimit();
-                        print("======> max: $result");
+                        setState(() {
+                          maxLimit = result;
+                        });
                       },
                     ),
                   ],
@@ -77,14 +81,14 @@ class _MyAppState extends State<MyApp> {
                           shortcutItems: <FlutterShortcutItem>[
                             const FlutterShortcutItem(
                               id: "1",
-                              action: 'Homepage',
-                              shortLabel: 'Play Ludo',
+                              action: 'Home page action',
+                              shortLabel: 'Home Page',
                               icon: 'ic_launcher',
                             ),
                             const FlutterShortcutItem(
                               id: "2",
-                              action: 'Secondpage',
-                              shortLabel: 'Play Snake Ladder',
+                              action: 'Second page action',
+                              shortLabel: 'Second Page',
                               icon: 'ic_launcher',
                             ),
                           ],
@@ -115,9 +119,9 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () async {
                         await flutterShortcuts.pushShortcutItem(
                           shortcut: FlutterShortcutItem(
-                            id: "2",
-                            action: "fifthaction",
-                            shortLabel: "shortLabel",
+                            id: "5",
+                            action: "Fifth action",
+                            shortLabel: "Shortcut 5",
                           ),
                         );
                       },
@@ -129,14 +133,14 @@ class _MyAppState extends State<MyApp> {
                           shortcutList: <FlutterShortcutItem>[
                             const FlutterShortcutItem(
                               id: "1",
-                              action: 'Homepage',
-                              shortLabel: 'Home Page 1',
+                              action: 'Home page action updated',
+                              shortLabel: 'Home Page updated',
                               icon: 'ic_launcher',
                             ),
                             const FlutterShortcutItem(
                               id: "2",
-                              action: 'Secondpage',
-                              shortLabel: 'Second Page 2',
+                              action: 'Second page action updated',
+                              shortLabel: 'Second Page updated',
                               icon: 'ic_launcher',
                             ),
                           ],
@@ -151,24 +155,24 @@ class _MyAppState extends State<MyApp> {
                     ElevatedButton(
                       child: Text("Add Shortcut"),
                       onPressed: () async {
-                        await flutterShortcuts.addShortcutItems(
+                        await flutterShortcuts.pushShortcutItems(
                             shortcutList: <FlutterShortcutItem>[
                               const FlutterShortcutItem(
                                 id: "1",
-                                action: 'Homepage',
-                                shortLabel: 'Home Page 1',
+                                action: 'homepage new action',
+                                shortLabel: 'Home Page',
                                 icon: 'ic_launcher',
                               ),
                               const FlutterShortcutItem(
                                 id: "2",
-                                action: 'Secondpage',
-                                shortLabel: 'Second Page 2',
+                                action: 'second page new action',
+                                shortLabel: 'Second Page',
                                 icon: 'ic_launcher',
                               ),
                               const FlutterShortcutItem(
                                 id: "3",
                                 action: 'Thirdpage',
-                                shortLabel: 'Third Page 3',
+                                shortLabel: 'Third Page',
                                 icon: 'ic_launcher',
                               ),
                             ]);
@@ -181,30 +185,11 @@ class _MyAppState extends State<MyApp> {
                           id: "1",
                           shortcut: FlutterShortcutItem(
                             id: "1",
-                            action: 'Fourthpage',
-                            shortLabel: 'Fourth Page 4',
+                            action: 'action updated with ID',
+                            shortLabel: 'Homepage',
                             icon: 'ic_launcher',
                           ),
                         );
-                      },
-                    ),
-                  ],
-                ),
-                Divider(),
-                Text("Long/Short Label"),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      child: Text("Change Short Title"),
-                      onPressed: () {
-                        // flutterShortcuts.updateShortcutItemTitle(id, title);
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text("Change Long Title"),
-                      onPressed: () {
-                        // flutterShortcuts.updateShortcutItemTitle(id, title);
                       },
                     ),
                   ],
@@ -215,58 +200,17 @@ class _MyAppState extends State<MyApp> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
-                      child: Text("Icon Properties"),
-                      onPressed: () async {
-                        Map<String, int> properties =
-                            await flutterShortcuts.getIconProperties();
-                        print(properties);
-                      },
-                    ),
-                    ElevatedButton(
                       child: Text("Change icon of 2nd Shortcut"),
                       onPressed: () {
                         flutterShortcuts.changeShortcutItemIcon(
-                            id: "2", icon: "bookmark_icon");
+                          id: "2",
+                          icon: "bookmark_icon",
+                        );
                       },
                     ),
                   ],
                 ),
                 Divider(),
-                ElevatedButton(
-                  child: Text("change icon color of 2nd Shortcut"),
-                  onPressed: () {
-                    // disable title
-                    // flutterShortcuts.changeIconColor(id, color);
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("change icon backgroud color of 2nd Shortcut"),
-                  onPressed: () {
-                    // disable title
-                    // flutterShortcuts.changeIconBackgroundColor(id, color);
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("set animated icon of 2nd Shortcut"),
-                  onPressed: () {
-                    // disable title
-                    // flutterShortcuts.setAnimatedIcon(id, AnimatedIcon);
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("set icon backgroud gradient of 2nd Shortcut"),
-                  onPressed: () {
-                    // disable title
-                    // flutterShortcuts.iconBackgroundGradient(id,[start,end], [start color,end color]);
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("Toggle disable state of 2nd Shortcut"),
-                  onPressed: () {
-                    // disable title
-                    // flutterShortcuts.updateDisableStateShortcutItem(id, state(bool), disable title);
-                  },
-                ),
               ],
             ),
           ),

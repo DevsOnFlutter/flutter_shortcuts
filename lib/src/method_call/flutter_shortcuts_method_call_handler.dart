@@ -35,14 +35,14 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     return channel.invokeMethod<int>('getMaxShortcutLimit');
   }
 
-  @override
-  Future<Map<String, int>> getIconProperties() async {
-    return channel.invokeMethod('getIconProperties').then(
-          (value) => value.map(
-            (key, value) => MapEntry<String, int>(key, value),
-          ),
-        );
-  }
+  // @override
+  // Future<Map<String, int>> getIconProperties() async {
+  //   return channel.invokeMethod('getIconProperties').then(
+  //         (value) => value.map(
+  //           (key, value) => MapEntry<String, int>(key, value),
+  //         ),
+  //       );
+  // }
 
   @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
@@ -63,17 +63,17 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
+  Future<void> pushShortcutItems(List<FlutterShortcutItem> items) async {
+    final List<Map<String, String>> itemsList =
+        items.map(_serializeItem).toList();
+    await channel.invokeMethod<void>('pushShortcutItems', itemsList);
+  }
+
+  @override
   Future<void> updateShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
     await channel.invokeMethod<void>('updateShortcutItems', itemsList);
-  }
-
-  @override
-  Future<void> addShortcutItems(List<FlutterShortcutItem> items) async {
-    final List<Map<String, String>> itemsList =
-        items.map(_serializeItem).toList();
-    await channel.invokeMethod<void>('addShortcutItems', itemsList);
   }
 
   @override
@@ -82,6 +82,17 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     final Map<String, String> item = _serializeItem(shortcut);
     await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }
+
+  // @override
+  // Future<void> updateShortLabel(String id, String shortLabel) async {
+  //   await channel
+  //       .invokeMethod<void>('changeShortcutItemIcon', [id, shortLabel]);
+  // }
+
+  // @override
+  // Future<void> updateLongLabel(String id, String longLabel) async {
+  //   await channel.invokeMethod<void>('changeShortcutItemIcon', [id, longLabel]);
+  // }
 
   @override
   Future<void> changeShortcutItemIcon(String id, String icon) async {
