@@ -10,7 +10,8 @@
 
 ## Demo
 
-<img src="https://i.imgur.com/IRUaepd.gif"/>
+|<img height=500 src="https://i.imgur.com/IRUaepd.gif"/>|
+|---|
 
 ## Quick Start
 
