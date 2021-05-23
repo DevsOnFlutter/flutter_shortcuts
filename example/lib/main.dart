@@ -34,139 +34,174 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Flutter Shortcuts Plugin'),
         ),
-        body: Column(
-          children: [
-            Center(
-              child: Text('ShortcutItem action : $action\n'),
-            ),
-            ElevatedButton(
-              child: Text("Set Shortcuts"),
-              onPressed: () async {
-                await flutterShortcuts.setShortcutItems(
-                  shortcutItems: <FlutterShortcutItem>[
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Center(
+                child: Text('ShortcutItem action : $action\n'),
+              ),
+              ElevatedButton(
+                child: Text("Get Max Shortcut Limit"),
+                onPressed: () async {
+                  int result = await flutterShortcuts.getMaxShortcutLimit();
+                  print("======> max: $result");
+                },
+              ),
+              ElevatedButton(
+                child: Text("Set Shortcuts"),
+                onPressed: () async {
+                  await flutterShortcuts.setShortcutItems(
+                    shortcutItems: <FlutterShortcutItem>[
+                      const FlutterShortcutItem(
+                        id: "1",
+                        action: 'Homepage',
+                        shortLabel: 'Play Ludo',
+                        icon: 'ic_launcher',
+                      ),
+                      const FlutterShortcutItem(
+                        id: "2",
+                        action: 'Secondpage',
+                        shortLabel: 'Play Snake Ladder',
+                        icon: 'ic_launcher',
+                      ),
+                    ],
+                  ).then((value) {
+                    setState(() {
+                      if (action == 'No Action') {
+                        action = 'Flutter Shortcuts Ready';
+                      }
+                    });
+                  });
+                },
+              ),
+              ElevatedButton(
+                child: Text("Clear All Shortcuts"),
+                onPressed: () {
+                  flutterShortcuts.clearShortcutItems();
+                },
+              ),
+              ElevatedButton(
+                child: Text("push Shortcut Item"),
+                onPressed: () async {
+                  await flutterShortcuts.pushShortcutItem(
+                    shortcut: FlutterShortcutItem(
+                      id: "2",
+                      action: "fifthaction",
+                      shortLabel: "shortLabel",
+                    ),
+                  );
+                },
+              ),
+              ElevatedButton(
+                child: Text("Update all shortcuts"),
+                onPressed: () async {
+                  await flutterShortcuts.updateAllShortcutItems(
+                      shortcutList: <FlutterShortcutItem>[
+                        const FlutterShortcutItem(
+                          id: "1",
+                          action: 'Homepage',
+                          shortLabel: 'Home Page 1',
+                          icon: 'ic_launcher',
+                        ),
+                        const FlutterShortcutItem(
+                          id: "2",
+                          action: 'Secondpage',
+                          shortLabel: 'Second Page 2',
+                          icon: 'ic_launcher',
+                        ),
+                      ]);
+                },
+              ),
+              ElevatedButton(
+                child: Text("Update and add New shortcuts"),
+                onPressed: () async {
+                  await flutterShortcuts
+                      .addShortcutItems(shortcutList: <FlutterShortcutItem>[
                     const FlutterShortcutItem(
                       id: "1",
                       action: 'Homepage',
-                      shortLabel: 'Play Ludo',
+                      shortLabel: 'Home Page 1',
                       icon: 'ic_launcher',
                     ),
                     const FlutterShortcutItem(
                       id: "2",
                       action: 'Secondpage',
-                      shortLabel: 'Play Snake Ladder',
+                      shortLabel: 'Second Page 2',
                       icon: 'ic_launcher',
                     ),
-                  ],
-                ).then((value) {
-                  setState(() {
-                    if (action == 'No Action') {
-                      action = 'Flutter Shortcuts Ready';
-                    }
-                  });
-                });
-              },
-            ),
-            ElevatedButton(
-              child: Text("Clear All Shortcuts"),
-              onPressed: () {
-                flutterShortcuts.clearShortcutItems();
-              },
-            ),
-            ElevatedButton(
-              child: Text("push Shortcut Item"),
-              onPressed: () async {
-                await flutterShortcuts.pushShortcutItem(
-                  shortcut: FlutterShortcutItem(
-                    id: "5",
-                    action: "fifthaction",
-                    shortLabel: "shortLabel",
-                  ),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: Text("Update all shortcuts"),
-              onPressed: () async {
-                await flutterShortcuts
-                    .updateAllShortcutItems(shortcutList: <FlutterShortcutItem>[
-                  const FlutterShortcutItem(
+                    const FlutterShortcutItem(
+                      id: "3",
+                      action: 'Thirdpage',
+                      shortLabel: 'Third Page 3',
+                      icon: 'ic_launcher',
+                    ),
+                  ]);
+                },
+              ),
+              ElevatedButton(
+                child: Text("Update 2nd Shortcut"),
+                onPressed: () {
+                  flutterShortcuts.updateShortcutItem(
                     id: "1",
-                    action: 'Homepage',
-                    shortLabel: 'Home Page 1',
-                    icon: 'ic_launcher',
-                  ),
-                  const FlutterShortcutItem(
-                    id: "2",
-                    action: 'Secondpage',
-                    shortLabel: 'Second Page 1',
-                    icon: 'ic_launcher',
-                  ),
-                ]);
-              },
-            ),
-            ElevatedButton(
-              child: Text("Update 2nd Shortcut"),
-              onPressed: () {
-                flutterShortcuts.updateShortcutItem(
-                  id: "1",
-                  shortcut: FlutterShortcutItem(
-                    id: "1",
-                    action: 'Fourthpage',
-                    shortLabel: 'Fourth Page 4',
-                    icon: 'ic_launcher',
-                  ),
-                );
-              },
-            ),
-            ElevatedButton(
-              child: Text("Change icon of 2nd Shortcut"),
-              onPressed: () {
-                flutterShortcuts.changeShortcutItemIcon(
-                    id: "2", icon: "bookmark_icon");
-              },
-            ),
-            ElevatedButton(
-              child: Text("change icon color of 2nd Shortcut"),
-              onPressed: () {
-                // disable title
-                // flutterShortcuts.changeIconColor(id, color);
-              },
-            ),
-            ElevatedButton(
-              child: Text("change icon backgroud color of 2nd Shortcut"),
-              onPressed: () {
-                // disable title
-                // flutterShortcuts.changeIconBackgroundColor(id, color);
-              },
-            ),
-            ElevatedButton(
-              child: Text("set animated icon of 2nd Shortcut"),
-              onPressed: () {
-                // disable title
-                // flutterShortcuts.setAnimatedIcon(id, AnimatedIcon);
-              },
-            ),
-            ElevatedButton(
-              child: Text("set icon backgroud gradient of 2nd Shortcut"),
-              onPressed: () {
-                // disable title
-                // flutterShortcuts.iconBackgroundGradient(id,[start,end], [start color,end color]);
-              },
-            ),
-            ElevatedButton(
-              child: Text("Change title of 2nd Shortcut"),
-              onPressed: () {
-                // flutterShortcuts.updateShortcutItemTitle(id, title);
-              },
-            ),
-            ElevatedButton(
-              child: Text("Toggle disable state of 2nd Shortcut"),
-              onPressed: () {
-                // disable title
-                // flutterShortcuts.updateDisableStateShortcutItem(id, state(bool), disable title);
-              },
-            ),
-          ],
+                    shortcut: FlutterShortcutItem(
+                      id: "1",
+                      action: 'Fourthpage',
+                      shortLabel: 'Fourth Page 4',
+                      icon: 'ic_launcher',
+                    ),
+                  );
+                },
+              ),
+              ElevatedButton(
+                child: Text("Change icon of 2nd Shortcut"),
+                onPressed: () {
+                  flutterShortcuts.changeShortcutItemIcon(
+                      id: "2", icon: "bookmark_icon");
+                },
+              ),
+              ElevatedButton(
+                child: Text("change icon color of 2nd Shortcut"),
+                onPressed: () {
+                  // disable title
+                  // flutterShortcuts.changeIconColor(id, color);
+                },
+              ),
+              ElevatedButton(
+                child: Text("change icon backgroud color of 2nd Shortcut"),
+                onPressed: () {
+                  // disable title
+                  // flutterShortcuts.changeIconBackgroundColor(id, color);
+                },
+              ),
+              ElevatedButton(
+                child: Text("set animated icon of 2nd Shortcut"),
+                onPressed: () {
+                  // disable title
+                  // flutterShortcuts.setAnimatedIcon(id, AnimatedIcon);
+                },
+              ),
+              ElevatedButton(
+                child: Text("set icon backgroud gradient of 2nd Shortcut"),
+                onPressed: () {
+                  // disable title
+                  // flutterShortcuts.iconBackgroundGradient(id,[start,end], [start color,end color]);
+                },
+              ),
+              ElevatedButton(
+                child: Text("Change title of 2nd Shortcut"),
+                onPressed: () {
+                  // flutterShortcuts.updateShortcutItemTitle(id, title);
+                },
+              ),
+              ElevatedButton(
+                child: Text("Toggle disable state of 2nd Shortcut"),
+                onPressed: () {
+                  // disable title
+                  // flutterShortcuts.updateDisableStateShortcutItem(id, state(bool), disable title);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

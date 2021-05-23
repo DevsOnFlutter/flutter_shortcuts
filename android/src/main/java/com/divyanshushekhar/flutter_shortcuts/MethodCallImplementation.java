@@ -44,12 +44,20 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
         ShortcutManager shortcutManager =
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
+
         switch (call.method) {
+            case "getMaxShortcutLimit":
+                final int maxLimit = getMaxShortcutLimit();
+                result.success(maxLimit);
+                break;
             case "setShortcutItems":
                 setShortcutItems(call,shortcutManager);
                 break;
             case "pushShortcutItem":
                 pushShortcutItem(call,shortcutManager);
+                break;
+            case "addShortcutItems":
+                addShortcutItems(call,shortcutManager);
                 break;
             case "updateAllShortcutItems":
                 updateAllShortcutItems(call,shortcutManager);
@@ -78,12 +86,19 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                     intent.removeExtra(EXTRA_ACTION);
                 }
                 result.success(launchAction);
-                return;
+                break;
             default:
                 result.notImplemented();
                 return;
         }
         result.success(null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private int getMaxShortcutLimit() {
+        ShortcutManager shortcutManager =
+                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
+        return shortcutManager.getMaxShortcutCountPerActivity();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -96,6 +111,13 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void pushShortcutItem(MethodCall call, ShortcutManager shortcutManager) {
+        final List<Map<String, String>> args = call.arguments();
+        List<ShortcutInfo> shortcutInfo = processShortcuts(args);
+        shortcutManager.addDynamicShortcuts(shortcutInfo);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void addShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
         final List<Map<String, String>> args = call.arguments();
         List<ShortcutInfo> shortcutInfo = processShortcuts(args);
         shortcutManager.addDynamicShortcuts(shortcutInfo);

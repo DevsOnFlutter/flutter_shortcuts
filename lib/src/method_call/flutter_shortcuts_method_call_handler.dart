@@ -31,6 +31,11 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
+  Future<int> getMaxShortcutLimit() {
+    return channel.invokeMethod<int>('getMaxShortcutLimit');
+  }
+
+  @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
@@ -53,6 +58,13 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
     await channel.invokeMethod<void>('updateAllShortcutItems', itemsList);
+  }
+
+  @override
+  Future<void> addShortcutItems(List<FlutterShortcutItem> items) async {
+    final List<Map<String, String>> itemsList =
+        items.map(_serializeItem).toList();
+    await channel.invokeMethod<void>('addShortcutItems', itemsList);
   }
 
   @override

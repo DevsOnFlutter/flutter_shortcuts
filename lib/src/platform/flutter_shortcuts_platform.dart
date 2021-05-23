@@ -32,6 +32,10 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("initialize() has not been implemented.");
   }
 
+  Future<int> getMaxShortcutLimit() {
+    throw UnimplementedError("getMaxShortcutLimit() has not been implemented.");
+  }
+
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
     throw UnimplementedError("setShortcutItems() has not been implemented.");
   }
@@ -46,6 +50,10 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
 
   Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {
     throw UnimplementedError("updateShortcutItems() has not been implemented.");
+  }
+
+  Future<void> addShortcutItems(List<FlutterShortcutItem> items) async {
+    throw UnimplementedError("addShortcutItems() has not been implemented.");
   }
 
   Future<void> updateShortcutItem(
