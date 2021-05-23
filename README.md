@@ -8,13 +8,42 @@
 
 [![GitHub followers](https://img.shields.io/github/followers/divshekhar.svg?style=social&label=Follow)](https://github.com/divshekhar/)
 
+## Quick Start
+
+### Step 1: Include plugin to your project
+
+```yml
+dependencies:
+  flutter_shortcuts: <latest version>
+```
+
+Run pub get and get packages.
+
+### Step 2: Instantiate Flutter Shortcuts Plugin
+
+```dart
+final FlutterShortcuts flutterShortcuts = FlutterShortcuts();
+```
+
+### Step 3: Initialize Flutter Shortcuts
+
+```dart
+flutterShortcuts.initialize((String incomingAction) {
+    setState(() {
+    if (incomingAction != null) {
+        action = incomingAction;
+    }
+  });
+});
+```
+
 ## Arguments
 
-There are several options that allow for more control:
+There are several function that allow for more control:
 
 |  Properties  |   Description   |
 |--------------|-----------------|
-| `initialize` | performs action when shortcut is initiated. |
+| `initialize` | performs action when shortcut is initiated.| 
 | `getMaxShortcutLimit` | returns the maximum number of static or dynamic shortcuts that each launcher icon can have at a time. |
 | `setShortcutItems` | will set all the shortcut items. |
 | `clearShortcutItems` | will remove all the shortcut items.|
@@ -32,7 +61,7 @@ There are several options that allow for more control:
 
 ### Subham Praharaj
 
-<a href="https://twitter.com/SubhamPraharaj6"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a> <a href="https://instagram.com/the_champ_subham_865"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
+<a href="https://twitter.com/SubhamPraharaj6"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a> <a href="https://www.linkedin.com/in/subham-praharaj-66b172179/"><img src="https://github.com/aritraroy/social-icons/blob/master/linkedin-icon.png?raw=true" width="60"></a> <a href="https://instagram.com/the_champ_subham_865"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
 
 ## Copyright & License
 

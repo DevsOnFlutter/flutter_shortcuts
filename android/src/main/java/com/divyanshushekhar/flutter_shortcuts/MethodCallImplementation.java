@@ -3,21 +3,16 @@ package com.divyanshushekhar.flutter_shortcuts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +128,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         } catch (Exception e) {
             Log.e(TAG,e.toString());
         }
-        Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
