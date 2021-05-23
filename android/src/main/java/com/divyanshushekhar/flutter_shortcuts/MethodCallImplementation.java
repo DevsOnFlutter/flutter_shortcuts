@@ -8,6 +8,7 @@ import android.content.pm.ShortcutManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class MethodCallImplementation implements MethodChannel.MethodCallHandler {
     private static final String EXTRA_ACTION = "flutter_shortcuts";
+    private static final String TAG = FlutterShortcutsPlugin.getTAG();
 
     private final Context context;
     private Activity activity;
@@ -50,6 +52,10 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 final int maxLimit = getMaxShortcutLimit();
                 result.success(maxLimit);
                 break;
+            case "getIconProperties":
+                Map<String,Integer> properties =  getIconProperties();
+                result.success(properties);
+                break;
             case "setShortcutItems":
                 setShortcutItems(call,shortcutManager);
                 break;
@@ -59,8 +65,8 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             case "addShortcutItems":
                 addShortcutItems(call,shortcutManager);
                 break;
-            case "updateAllShortcutItems":
-                updateAllShortcutItems(call,shortcutManager);
+            case "updateShortcutItems":
+                updateShortcutItems(call,shortcutManager);
                 break;
             case "updateShortcutItem":
                 updateShortcutItem(call,shortcutManager);
@@ -89,9 +95,8 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 break;
             default:
                 result.notImplemented();
-                return;
+                break;
         }
-        result.success(null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -102,33 +107,67 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private Map<String, Integer> getIconProperties() {
+        ShortcutManager shortcutManager =
+                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
+        Map<String, Integer> properties = new HashMap<String, Integer>();
+        properties.put("maxHeight", shortcutManager.getIconMaxHeight());
+        properties.put("maxWidth", shortcutManager.getIconMaxWidth());
+        return properties;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void setShortcutItems(MethodCall call,ShortcutManager shortcutManager) {
         List<Map<String, String>> setShortcutItemsArgs = call.arguments();
-        List<ShortcutInfo> shortcuts = processShortcuts(setShortcutItemsArgs);
-        shortcutManager.setDynamicShortcuts(shortcuts);
+        List<ShortcutInfo> shortcuts;
+        try {
+            shortcuts = processShortcuts(setShortcutItemsArgs);
+            shortcutManager.setDynamicShortcuts(shortcuts);
+        } catch (Exception e) {
+            Log.e(TAG,e.toString());
+        }
         Toast.makeText(context, "Shortcut Created", Toast.LENGTH_SHORT).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void pushShortcutItem(MethodCall call, ShortcutManager shortcutManager) {
         final List<Map<String, String>> args = call.arguments();
-        List<ShortcutInfo> shortcutInfo = processShortcuts(args);
-        shortcutManager.addDynamicShortcuts(shortcutInfo);
+        List<ShortcutInfo> shortcuts;
+        try {
+            shortcuts = processShortcuts(args);
+            shortcutManager.addDynamicShortcuts(shortcuts);
+        } catch (Exception e) {
+            Log.e(TAG,e.toString());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void addShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
         final List<Map<String, String>> args = call.arguments();
-        List<ShortcutInfo> shortcutInfo = processShortcuts(args);
-        shortcutManager.addDynamicShortcuts(shortcutInfo);
+        List<ShortcutInfo> shortcuts;
+        try {
+            shortcuts = processShortcuts(args);
+            shortcutManager.addDynamicShortcuts(shortcuts);
+        } catch (Exception e) {
+            Log.e(TAG,e.toString());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void updateAllShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
+    private void updateShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
         List<Map<String, String>> updateAllShortcutArgs = call.arguments();
-        List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
-        boolean updated = shortcutManager.updateShortcuts(updateShortcuts);
-        Toast.makeText(context, "Shortcut Updated: " + updated, Toast.LENGTH_SHORT).show();
+        boolean updated = false;
+        try {
+            List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
+            updated = shortcutManager.updateShortcuts(updateShortcuts);
+        } catch(Exception e) {
+            Log.e(TAG, e.toString());
+        }
+        if(updated) {
+            Log.d(TAG,"All Shortcuts updated");
+        } else {
+            Log.d(TAG,"Unable to update all shortcuts");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -138,15 +177,25 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final String refId = info.get("id");
         List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
+        int flag = 1;
         for(ShortcutInfo si : dynamicShortcuts) {
             if(si.getId().equalsIgnoreCase(refId))  {
                 ShortcutInfo shortcutInfo = createShortcutInfo(info);
                 shortcutList.add(shortcutInfo);
+                flag = 0;
                 continue;
             }
             shortcutList.add(si);
         }
-        shortcutManager.updateShortcuts(shortcutList);
+        if (flag == 1) {
+            Log.e(TAG, "ID did not match any shortcut");
+            return;
+        }
+        try {
+            shortcutManager.updateShortcuts(shortcutList);
+        } catch(Exception e) {
+            Log.e(TAG,e.toString());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -158,14 +207,24 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         ShortcutInfo shortcutInfo = createShortcutInfo(items);
         List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
+        int flag = 1;
         for(ShortcutInfo si : dynamicShortcuts) {
             if(si.getId().equalsIgnoreCase(refId))  {
                 shortcutList.add(shortcutInfo);
+                flag = 0;
                 continue;
             }
             shortcutList.add(si);
         }
-        shortcutManager.updateShortcuts(shortcutList);
+        if (flag == 1) {
+            Log.e(TAG, "ID did not match any shortcut");
+            return;
+        }
+        try {
+            shortcutManager.updateShortcuts(shortcutList);
+        } catch(Exception e) {
+            Log.e(TAG,e.toString());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)

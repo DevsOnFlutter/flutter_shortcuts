@@ -36,6 +36,15 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
+  Future<Map<String, int>> getIconProperties() async {
+    return channel.invokeMethod('getIconProperties').then(
+          (value) => value.map(
+            (key, value) => MapEntry<String, int>(key, value),
+          ),
+        );
+  }
+
+  @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
@@ -54,10 +63,10 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
-  Future<void> updateAllShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> updateShortcutItems(List<FlutterShortcutItem> items) async {
     final List<Map<String, String>> itemsList =
         items.map(_serializeItem).toList();
-    await channel.invokeMethod<void>('updateAllShortcutItems', itemsList);
+    await channel.invokeMethod<void>('updateShortcutItems', itemsList);
   }
 
   @override

@@ -27,6 +27,12 @@ class FlutterShortcuts {
     return FlutterShortcutsPlatform.instance.getMaxShortcutLimit();
   }
 
+  /// [getIconProperties] returns the "maxHeight" and "maxWidth" of the shortcut icon.
+  /// Example: {"maxHeight": 250, "maxWidth": 200}
+  Future<Map<String, int>> getIconProperties() {
+    return FlutterShortcutsPlatform.instance.getIconProperties();
+  }
+
   /// [setShortcutItems] will set all the shortcut items.
   Future<void> setShortcutItems(
       {List<FlutterShortcutItem> shortcutItems}) async {
@@ -52,12 +58,11 @@ class FlutterShortcuts {
     return FlutterShortcutsPlatform.instance.addShortcutItems(shortcutList);
   }
 
-  /// [updateAllShortcutItems] updates all the shortcut items.
+  /// [updateShortcutItems] updates shortcut items.
   /// If the IDs of the shortcuts are not same, no changes will be reflected.
-  Future<void> updateAllShortcutItems(
+  Future<void> updateShortcutItems(
       {List<FlutterShortcutItem> shortcutList}) async {
-    return FlutterShortcutsPlatform.instance
-        .updateAllShortcutItems(shortcutList);
+    return FlutterShortcutsPlatform.instance.updateShortcutItems(shortcutList);
   }
 
   /// [updateShortcutItem] updates a single shortcut item based on id.

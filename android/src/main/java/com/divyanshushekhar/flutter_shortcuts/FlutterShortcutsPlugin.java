@@ -13,6 +13,11 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class FlutterShortcutsPlugin implements FlutterPlugin, ActivityAware {
   private static final String CHANNEL_ID = "com.divyanshushekhar.flutter_shortcuts";
+  private static final String TAG = "[Flutter Shortcuts]";
+
+  public static String getTAG() {
+    return TAG;
+  }
 
   public static String getChannelId() {
     return CHANNEL_ID;
