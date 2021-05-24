@@ -68,8 +68,8 @@ class FlutterShortcuts {
   /// [updateShortcutItem] updates a single shortcut item based on id.
   /// If the ID of the shortcut is not same, no changes will be reflected.
   Future<void> updateShortcutItem(
-      {required String id, required FlutterShortcutItem shortcut}) async {
-    return FlutterShortcutsPlatform.instance.updateShortcutItem(id, shortcut);
+      {required FlutterShortcutItem shortcut}) async {
+    return FlutterShortcutsPlatform.instance.updateShortcutItem(shortcut);
   }
 
   // /// [updateShortLabel] updates short label of the shortcut item based on id.

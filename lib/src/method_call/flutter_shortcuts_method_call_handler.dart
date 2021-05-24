@@ -75,8 +75,7 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
-  Future<void> updateShortcutItem(
-      String id, FlutterShortcutItem shortcut) async {
+  Future<void> updateShortcutItem(FlutterShortcutItem shortcut) async {
     final Map<String, String?> item = _serializeItem(shortcut);
     await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }

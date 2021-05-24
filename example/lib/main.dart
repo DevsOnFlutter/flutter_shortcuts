@@ -179,7 +179,6 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Update Shortcut with ID"),
                       onPressed: () {
                         flutterShortcuts.updateShortcutItem(
-                          id: "1",
                           shortcut: FlutterShortcutItem(
                             id: "1",
                             action: 'action updated with ID',
