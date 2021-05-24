@@ -36,9 +36,9 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("getMaxShortcutLimit() has not been implemented.");
   }
 
-  // Future<Map<String, int>> getIconProperties() {
-  //   throw UnimplementedError("getIconProperties() has not been implemented.");
-  // }
+  Future<Map<String, int>> getIconProperties() {
+    throw UnimplementedError("getIconProperties() has not been implemented.");
+  }
 
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
     throw UnimplementedError("setShortcutItems() has not been implemented.");

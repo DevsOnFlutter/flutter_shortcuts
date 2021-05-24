@@ -197,6 +197,16 @@ class _MyAppState extends State<MyApp> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      child: Text("icon Properties"),
+                      onPressed: () async {
+                        Map<String, int> result =
+                            await flutterShortcuts.getIconProperties();
+                        print(
+                          "maxHeight: ${result["maxHeight"]}, maxWidth: ${result["maxWidth"]}",
+                        );
+                      },
+                    ),
+                    ElevatedButton(
                       child: Text("Change icon of 2nd Shortcut"),
                       onPressed: () {
                         flutterShortcuts.changeShortcutItemIcon(

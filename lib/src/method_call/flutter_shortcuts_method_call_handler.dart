@@ -36,14 +36,11 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     return channel.invokeMethod<int>('getMaxShortcutLimit');
   }
 
-  // @override
-  // Future<Map<String, int>> getIconProperties() async {
-  //   return channel.invokeMethod('getIconProperties').then(
-  //         (value) => value.map(
-  //           (key, value) => MapEntry<String, int>(key, value),
-  //         ),
-  //       );
-  // }
+  @override
+  Future<Map<String, int>> getIconProperties() async {
+    return Map.castFrom<dynamic, dynamic, String, int>(
+        await channel.invokeMethod('getIconProperties'));
+  }
 
   @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
