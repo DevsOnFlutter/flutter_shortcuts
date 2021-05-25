@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Log;
@@ -13,11 +18,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.flutter.FlutterInjector;
+import io.flutter.embedding.engine.loader.FlutterLoader;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
@@ -276,13 +284,17 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final ShortcutInfo.Builder shortcutBuilder;
         shortcutBuilder = new ShortcutInfo.Builder(context, id);
 
-        final int resourceId = loadResourceId(context, icon);
+//        final int resourceId = loadResourceId(context, icon);
         final Intent intent = getIntentToOpenMainActivity(action);
 
-        if (resourceId > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
-            }
+//        if (resourceId > 0) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+//                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
+//            }
+//        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            shortcutBuilder.setIcon(getIconFromFlutterAsset(context,icon));
         }
 
         if(longLabel != null) {
@@ -294,6 +306,26 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 .setShortLabel(shortLabel)
                 .setIntent(intent)
                 .build();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Icon getIconFromFlutterAsset(Context context, String path) {
+        AssetManager assetManager = context.getAssets();
+        FlutterLoader loader = FlutterInjector.instance().flutterLoader();
+        String key = loader.getLookupKeyForAsset(path);
+        AssetFileDescriptor fd = null;
+        try {
+            fd = assetManager.openFd(key);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Bitmap image = null;
+        try {
+            image = BitmapFactory.decodeStream(fd.createInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Icon.createWithAdaptiveBitmap(image);
     }
 
     private int loadResourceId(Context context, String icon) {

@@ -80,13 +80,13 @@ class _MyAppState extends State<MyApp> {
                               id: "1",
                               action: 'Home page action',
                               shortLabel: 'Home Page',
-                              icon: 'ic_launcher',
+                              icon: 'assets/icons/home.png',
                             ),
                             const FlutterShortcutItem(
                               id: "2",
-                              action: 'Second page action',
-                              shortLabel: 'Second Page',
-                              icon: 'ic_launcher',
+                              action: 'Bookmark page action',
+                              shortLabel: 'Bookmark Page',
+                              icon: 'assets/icons/bookmark.png',
                             ),
                           ],
                         ).then((value) {
@@ -117,8 +117,9 @@ class _MyAppState extends State<MyApp> {
                         await flutterShortcuts.pushShortcutItem(
                           shortcut: FlutterShortcutItem(
                             id: "5",
-                            action: "Fifth action",
-                            shortLabel: "Shortcut 5",
+                            action: "Play Music Action",
+                            shortLabel: "Play Music",
+                            icon: 'assets/icons/music.png',
                           ),
                         );
                       },
@@ -130,15 +131,15 @@ class _MyAppState extends State<MyApp> {
                           shortcutList: <FlutterShortcutItem>[
                             const FlutterShortcutItem(
                               id: "1",
-                              action: 'Home page action updated',
-                              shortLabel: 'Home Page updated',
-                              icon: 'ic_launcher',
+                              action: 'Resume playing Action',
+                              shortLabel: 'Resume playing',
+                              icon: 'assets/icons/play.png',
                             ),
                             const FlutterShortcutItem(
                               id: "2",
-                              action: 'Second page action updated',
-                              shortLabel: 'Second Page updated',
-                              icon: 'ic_launcher',
+                              action: 'Search Songs Action',
+                              shortLabel: 'Search Songs',
+                              icon: 'assets/icons/search.png',
                             ),
                           ],
                         );
@@ -156,21 +157,21 @@ class _MyAppState extends State<MyApp> {
                             shortcutList: <FlutterShortcutItem>[
                               const FlutterShortcutItem(
                                 id: "1",
-                                action: 'homepage new action',
+                                action: 'Home page new action',
                                 shortLabel: 'Home Page',
-                                icon: 'ic_launcher',
+                                icon: 'assets/icons/home.png',
                               ),
                               const FlutterShortcutItem(
                                 id: "2",
-                                action: 'second page new action',
-                                shortLabel: 'Second Page',
-                                icon: 'ic_launcher',
+                                action: 'Bookmark page new action',
+                                shortLabel: 'Bookmark Page',
+                                icon: 'assets/icons/bookmark.png',
                               ),
                               const FlutterShortcutItem(
                                 id: "3",
-                                action: 'Thirdpage',
-                                shortLabel: 'Third Page',
-                                icon: 'ic_launcher',
+                                action: 'Settings Action',
+                                shortLabel: 'Setting',
+                                icon: 'assets/icons/settings.png',
                               ),
                             ]);
                       },
@@ -181,9 +182,9 @@ class _MyAppState extends State<MyApp> {
                         flutterShortcuts.updateShortcutItem(
                           shortcut: FlutterShortcutItem(
                             id: "1",
-                            action: 'action updated with ID',
-                            shortLabel: 'Homepage',
-                            icon: 'ic_launcher',
+                            action: 'Go to url action',
+                            shortLabel: 'Visit Page',
+                            icon: 'assets/icons/url.png',
                           ),
                         );
                       },
@@ -210,7 +211,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () {
                         flutterShortcuts.changeShortcutItemIcon(
                           id: "2",
-                          icon: "bookmark_icon",
+                          icon: "assets/icons/next.png",
                         );
                       },
                     ),
