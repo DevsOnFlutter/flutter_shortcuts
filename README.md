@@ -2,7 +2,7 @@
 
 <img src="https://i.imgur.com/462Y6wf.gif" title="source: imgur.com" />
 
-![GitHub](https://img.shields.io/github/license/divshekhar/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/divshekhar/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/divshekhar/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/divshekhar/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/divshekhar/flutter_shortcuts?style=plastic)
+![GitHub](https://img.shields.io/github/license/divshekhar/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/divshekhar/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/divshekhar/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/divshekhar/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/divshekhar/flutter_shortcuts?style=plastic) ![GitHub issues](https://img.shields.io/github/issues/divshekhar/flutter_shortcuts?style=plastic) ![GitHub Repo stars](https://img.shields.io/github/stars/divshekhar/flutter_shortcuts?style=social) ![GitHub forks](https://img.shields.io/github/forks/divshekhar/flutter_shortcuts?style=social)
 
 ## Show some :heart: and :star: the repo
 
