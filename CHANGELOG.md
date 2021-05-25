@@ -1,3 +1,8 @@
+## v1.2.0
+
+* **Breaking Change** renamed `initialize` to `listenAction`.
+* **Breaking Change** `initialize` takes bool debug.
+
 ## v1.1.0
 
 * **Breaking Change** `updateShortcutItem` doesn't take id.

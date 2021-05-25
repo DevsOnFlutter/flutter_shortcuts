@@ -1,6 +1,6 @@
 name: flutter_shortcuts
 description: Flutter plugin for creating static & dynamic app shortcuts on home screen.
-version: 1.1.0
+version: 1.2.0
 repository: https://github.com/divshekhar/flutter_shortcuts
 documentation: https://github.com/divshekhar/flutter_shortcuts/blob/main/README.md
 

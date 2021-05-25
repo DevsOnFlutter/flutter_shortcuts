@@ -28,7 +28,7 @@ All the features listed below can be performed at the runtime.
 
 ## Demo
 
-|<img height=500 src="https://i.imgur.com/IRUaepd.gif"/>|
+|<img height=500 src="https://i.imgur.com/UPcyPEl.gif"/>|
 |---|
 
 ## Quick Start
