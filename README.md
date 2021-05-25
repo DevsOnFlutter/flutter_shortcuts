@@ -48,12 +48,18 @@ Run pub get and get packages.
 final FlutterShortcuts flutterShortcuts = FlutterShortcuts();
 ```
 
+### Step 3: Initialize Flutter Shortcuts
+
+```dart
+flutterShortcuts.initialize(debug: true);
+```
+
 ## Example
 
 ### Define Shortcut Action
 
 ```dart
-flutterShortcuts.initialize((String incomingAction) {
+flutterShortcuts.listenAction((String incomingAction) {
     setState(() {
     if (incomingAction != null) {
         action = incomingAction;
