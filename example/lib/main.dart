@@ -18,7 +18,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    flutterShortcuts.initialize((String incomingAction) {
+    flutterShortcuts.initialize(debug: true);
+    flutterShortcuts.listenAction((String incomingAction) {
       setState(() {
         action = incomingAction;
       });
