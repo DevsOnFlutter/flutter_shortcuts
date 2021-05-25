@@ -16,9 +16,14 @@ import 'package:flutter_shortcuts/src/helper/helper.dart';
 export 'package:flutter_shortcuts/src/helper/helper.dart';
 
 class FlutterShortcuts {
-  /// [initialize] performs action when shortcut is initiated.
-  Future<void> initialize(FlutterShortcutAction action) async {
-    FlutterShortcutsPlatform.instance.initialize(action);
+  /// [initialize] initializes the flutter_shortcuts plugin.
+  Future<void> initialize({bool debug = true}) async {
+    FlutterShortcutsPlatform.instance.initialize(debug);
+  }
+
+  /// [listenAction] performs action when shortcut is initiated.
+  Future<void> listenAction(FlutterShortcutAction action) async {
+    FlutterShortcutsPlatform.instance.listenAction(action);
   }
 
   /// [getMaxShortcutLimit] returns the maximum number of static or dynamic
@@ -51,7 +56,7 @@ class FlutterShortcuts {
     return FlutterShortcutsPlatform.instance.pushShortcutItem(shortcut);
   }
 
-  /// [addShortcutItems] updates dynamic or pinned shortcuts with same IDs
+  /// [pushShortcutItems] updates dynamic or pinned shortcuts with same IDs
   /// and pushes new shortcuts with different IDs.
   Future<void> pushShortcutItems(
       {required List<FlutterShortcutItem> shortcutList}) async {

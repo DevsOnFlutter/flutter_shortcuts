@@ -13,22 +13,12 @@ import '../enums/shortcut_icon_asset.dart';
 class FlutterShortcutItem {
   /// Create a flutter shortcut item.
   /// Eg.
-  /// ```
+  /// ```dart
   /// const FlutterShortcutItem(
-  /// ```
-  /// ```
   ///   id: "1",
-  /// ```
-  /// ```
   ///   action: 'Home page action',
-  /// ```
-  /// ```
   ///   shortLabel: 'Home Page',
-  /// ```
-  /// ```
   ///   icon: 'assets/icons/home.png',
-  /// ```
-  /// ```
   /// );
   /// ```
 
@@ -56,6 +46,6 @@ class FlutterShortcutItem {
   /// Flutter asset path. Only Supports image files. Eg. .png/.jpg
   final String? icon;
 
-  /// `ShortcutIconType.native` or `ShortcutIconType.flutterAsset`
+  /// `ShortcutIconType.androidAsset` or `ShortcutIconType.flutterAsset`
   final ShortcutIconAsset shortcutIconAsset;
 }

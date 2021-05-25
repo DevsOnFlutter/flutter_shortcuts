@@ -28,8 +28,12 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> initialize(FlutterShortcutAction action) async {
+  Future<void> initialize(bool debug) async {
     throw UnimplementedError("initialize() has not been implemented.");
+  }
+
+  Future<void> listenAction(FlutterShortcutAction action) async {
+    throw UnimplementedError("listenAction() has not been implemented.");
   }
 
   Future<int?> getMaxShortcutLimit() {

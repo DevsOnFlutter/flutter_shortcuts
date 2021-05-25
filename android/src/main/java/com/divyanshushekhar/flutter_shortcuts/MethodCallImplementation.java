@@ -10,7 +10,6 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Log;
@@ -23,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.loader.FlutterLoader;
@@ -35,6 +35,14 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     private final Context context;
     private Activity activity;
+
+    private boolean debug;
+
+    void debugPrint(String message) {
+        if(debug) {
+            Log.d(TAG,message);
+        }
+    }
 
     MethodCallImplementation(Context context, Activity activity) {
         this.context = context;
@@ -55,6 +63,12 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
 
         switch (call.method) {
+            case "initialize":
+                initialize(call);
+                break;
+            case "getLaunchAction":
+                getLaunchAction(shortcutManager,result);
+                break;
             case "getMaxShortcutLimit":
                 final int maxLimit = getMaxShortcutLimit();
                 result.success(maxLimit);
@@ -87,26 +101,35 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             case "clearShortcutItems":
                 shortcutManager.removeAllDynamicShortcuts();
                 break;
-            case "getLaunchAction":
-                if (activity == null) {
-                    result.error(
-                            "flutter_shortcuts_no_activity",
-                            "There is no activity available when launching action",
-                            null);
-                    return;
-                }
-                final Intent intent = activity.getIntent();
-                final String launchAction = intent.getStringExtra(EXTRA_ACTION);
-                if (launchAction != null && !launchAction.isEmpty()) {
-                    shortcutManager.reportShortcutUsed(launchAction);
-                    intent.removeExtra(EXTRA_ACTION);
-                }
-                result.success(launchAction);
-                break;
             default:
                 result.notImplemented();
                 break;
         }
+    }
+
+    private void initialize(MethodCall call) {
+        List<Map<String, String>> args = call.arguments();
+        this.debug = Boolean.parseBoolean(args.get(0).get("debug"));
+        debugPrint("Flutter Shortcuts Initialized");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void getLaunchAction(ShortcutManager shortcutManager, MethodChannel.Result result) {
+        if (activity == null) {
+            result.error(
+                    "flutter_shortcuts_no_activity",
+                    "There is no activity available when launching action",
+                    null);
+            return;
+        }
+        final Intent intent = activity.getIntent();
+        final String launchAction = intent.getStringExtra(EXTRA_ACTION);
+        if (launchAction != null && !launchAction.isEmpty()) {
+            shortcutManager.reportShortcutUsed(launchAction);
+            intent.removeExtra(EXTRA_ACTION);
+        }
+        result.success(launchAction);
+        debugPrint("Launch Action: " + launchAction);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -128,11 +151,12 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void setShortcutItems(MethodCall call,ShortcutManager shortcutManager) {
-        List<Map<String, String>> setShortcutItemsArgs = call.arguments();
+        List<Map<String, String>> args = call.arguments();
         List<ShortcutInfo> shortcuts;
         try {
-            shortcuts = processShortcuts(setShortcutItemsArgs);
+            shortcuts = processShortcuts(args);
             shortcutManager.setDynamicShortcuts(shortcuts);
+            debugPrint("Shortcuts created");
         } catch (Exception e) {
             Log.e(TAG,e.toString());
         }
@@ -145,6 +169,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         try {
             shortcuts = processShortcuts(args);
             shortcutManager.addDynamicShortcuts(shortcuts);
+            debugPrint("Shortcut pushed");
         } catch (Exception e) {
             Log.e(TAG,e.toString());
         }
@@ -157,6 +182,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         try {
             shortcuts = processShortcuts(args);
             shortcutManager.addDynamicShortcuts(shortcuts);
+            debugPrint("Shortcuts pushed");
         } catch (Exception e) {
             Log.e(TAG,e.toString());
         }
@@ -164,18 +190,18 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void updateShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
-        List<Map<String, String>> updateAllShortcutArgs = call.arguments();
+        List<Map<String, String>> args = call.arguments();
         boolean updated = false;
         try {
-            List<ShortcutInfo> updateShortcuts = processShortcuts(updateAllShortcutArgs);
+            List<ShortcutInfo> updateShortcuts = processShortcuts(args);
             updated = shortcutManager.updateShortcuts(updateShortcuts);
         } catch(Exception e) {
             Log.e(TAG, e.toString());
         }
         if(updated) {
-            Log.d(TAG,"All Shortcuts updated");
+            debugPrint("Shortcuts updated");
         } else {
-            Log.d(TAG,"Unable to update all shortcuts");
+            debugPrint("Unable to update shortcuts");
         }
     }
 
@@ -202,6 +228,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
         try {
             shortcutManager.updateShortcuts(shortcutList);
+            debugPrint("Shortcut updated");
         } catch(Exception e) {
             Log.e(TAG,e.toString());
         }
@@ -211,7 +238,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final List<String> args = call.arguments();
         final String refId = args.get(0);
         final String title = args.get(1);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -239,6 +265,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             }
             try {
                 shortcutManager.updateShortcuts(shortcutList);
+                debugPrint("Shortcut Icon Changed.");
             } catch(Exception e) {
                 Log.e(TAG,e.toString());
             }
@@ -281,7 +308,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final String action = shortcut.get("action");
         final String shortLabel = shortcut.get("shortLabel");
         final String longLabel = shortcut.get("LongLabel");
-        final int iconType = Integer.parseInt(shortcut.get("shortcutIconType"));
+        final int iconType = Integer.parseInt(Objects.requireNonNull(shortcut.get("shortcutIconType")));
         final ShortcutInfo.Builder shortcutBuilder;
         shortcutBuilder = new ShortcutInfo.Builder(context, id);
 
@@ -340,6 +367,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
         Bitmap image = null;
         try {
+            assert fd != null;
             image = BitmapFactory.decodeStream(fd.createInputStream());
         } catch (IOException e) {
             e.printStackTrace();

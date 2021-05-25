@@ -11,6 +11,7 @@ for more details.
 import 'package:flutter/services.dart';
 import 'package:flutter_shortcuts/src/platform/flutter_shortcuts_platform.dart';
 import 'package:flutter_shortcuts/src/helper/helper.dart';
+import 'package:flutter/foundation.dart';
 
 class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   final MethodChannel _channel =
@@ -19,7 +20,15 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   MethodChannel get channel => _channel;
 
   @override
-  Future<void> initialize(FlutterShortcutAction actionHandler) async {
+  Future<void> initialize(bool debug) async {
+    Map<String, String> initValue = {
+      'debug': kReleaseMode ? false.toString() : debug.toString(),
+    };
+    await channel.invokeMethod('initialize', [initValue]);
+  }
+
+  @override
+  Future<void> listenAction(FlutterShortcutAction actionHandler) async {
     channel.setMethodCallHandler((MethodCall call) async {
       assert(call.method == 'launch');
       actionHandler(call.arguments);
