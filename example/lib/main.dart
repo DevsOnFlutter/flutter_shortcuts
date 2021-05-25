@@ -86,7 +86,9 @@ class _MyAppState extends State<MyApp> {
                               id: "2",
                               action: 'Bookmark page action',
                               shortLabel: 'Bookmark Page',
-                              icon: 'assets/icons/bookmark.png',
+                              // icon: 'assets/icons/bookmark.png',
+                              icon: "ic_launcher",
+                              shortcutIconAsset: ShortcutIconAsset.androidAsset,
                             ),
                           ],
                         ).then((value) {

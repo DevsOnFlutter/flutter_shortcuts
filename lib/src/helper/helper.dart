@@ -10,3 +10,4 @@ for more details.
 
 export 'action/flutter_shortcut_action.dart';
 export 'model/flutter_shortcut_item.dart';
+export 'enums/shortcut_icon_asset.dart';

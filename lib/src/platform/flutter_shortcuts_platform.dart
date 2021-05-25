@@ -64,14 +64,6 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("updateShortcutItem() has not been implemented.");
   }
 
-  // Future<void> updateShortLabel(String id, String shortLabel) async {
-  //   throw UnimplementedError("updateShortcutItem() has not been implemented.");
-  // }
-
-  // Future<void> updateLongLabel(String id, String longLabel) async {
-  //   throw UnimplementedError("updateShortcutItem() has not been implemented.");
-  // }
-
   Future<void> changeShortcutItemIcon(String id, String icon) async {
     throw UnimplementedError(
         "changeShortcutItemIcon() has not been implemented.");

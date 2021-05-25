@@ -80,17 +80,6 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
     await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }
 
-  // @override
-  // Future<void> updateShortLabel(String id, String shortLabel) async {
-  //   await channel
-  //       .invokeMethod<void>('changeShortcutItemIcon', [id, shortLabel]);
-  // }
-
-  // @override
-  // Future<void> updateLongLabel(String id, String longLabel) async {
-  //   await channel.invokeMethod<void>('changeShortcutItemIcon', [id, longLabel]);
-  // }
-
   @override
   Future<void> changeShortcutItemIcon(String id, String icon) async {
     await channel.invokeMethod<void>('changeShortcutItemIcon', [id, icon]);
@@ -103,6 +92,7 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
       'shortLabel': item.shortLabel,
       'longLabel': item.longLabel,
       'icon': item.icon,
+      'shortcutIconType': item.shortcutIconAsset.index.toString(),
     };
   }
 }

@@ -281,20 +281,23 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final String action = shortcut.get("action");
         final String shortLabel = shortcut.get("shortLabel");
         final String longLabel = shortcut.get("LongLabel");
+        final int iconType = Integer.parseInt(shortcut.get("shortcutIconType"));
         final ShortcutInfo.Builder shortcutBuilder;
         shortcutBuilder = new ShortcutInfo.Builder(context, id);
 
-//        final int resourceId = loadResourceId(context, icon);
         final Intent intent = getIntentToOpenMainActivity(action);
 
-//        if (resourceId > 0) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-//                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
-//            }
-//        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            shortcutBuilder.setIcon(getIconFromFlutterAsset(context,icon));
+        // 0 - ShortcutIconType.androidAsset
+        // 1 - ShortcutIconType.flutterAsset
+        switch (iconType) {
+            case 0:
+                setIconFromNative(shortcutBuilder, icon);
+                break;
+            case 1:
+                setIconFromFlutter(shortcutBuilder, icon);
+                break;
+            default:
+                break;
         }
 
         if(longLabel != null) {
@@ -306,6 +309,22 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 .setShortLabel(shortLabel)
                 .setIntent(intent)
                 .build();
+    }
+
+
+    private void setIconFromNative(ShortcutInfo.Builder shortcutBuilder, String icon) {
+        final int resourceId = loadResourceId(context, icon);
+        if (resourceId > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                shortcutBuilder.setIcon(Icon.createWithResource(context, resourceId));
+            }
+        }
+    }
+
+    private void setIconFromFlutter(ShortcutInfo.Builder shortcutBuilder, String icon) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            shortcutBuilder.setIcon(getIconFromFlutterAsset(context,icon));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

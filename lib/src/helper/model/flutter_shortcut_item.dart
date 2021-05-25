@@ -8,6 +8,8 @@ for more details.
 
 */
 
+import '../enums/shortcut_icon_asset.dart';
+
 class FlutterShortcutItem {
   /// Create a flutter shortcut item.
   /// Eg.
@@ -34,6 +36,7 @@ class FlutterShortcutItem {
     required this.id,
     required this.action,
     required this.shortLabel,
+    this.shortcutIconAsset = ShortcutIconAsset.flutterAsset,
     this.longLabel,
     this.icon,
   });
@@ -52,4 +55,7 @@ class FlutterShortcutItem {
 
   /// Flutter asset path. Only Supports image files. Eg. .png/.jpg
   final String? icon;
+
+  /// `ShortcutIconType.native` or `ShortcutIconType.flutterAsset`
+  final ShortcutIconAsset shortcutIconAsset;
 }
