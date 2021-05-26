@@ -3,8 +3,6 @@ package com.divyanshushekhar.flutter_shortcuts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -40,7 +38,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     private Activity activity;
 
     private boolean debug;
-    private boolean voiceAssistantVisibility;
 
     void debugPrint(String message) {
         if(debug) {
@@ -110,7 +107,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     private void initialize(MethodCall call) {
         List<Map<String, String>> args = call.arguments();
         this.debug = Boolean.parseBoolean(args.get(0).get("debug"));
-        this.voiceAssistantVisibility = Boolean.parseBoolean(args.get(0).get("voiceAssistantVisibility"));
         debugPrint("Flutter Shortcuts Initialized");
     }
 
