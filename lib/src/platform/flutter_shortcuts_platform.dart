@@ -28,7 +28,10 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> initialize(bool debug) async {
+  Future<void> initialize(
+    bool debug,
+    bool voiceAssistantVisibility,
+  ) async {
     throw UnimplementedError("initialize() has not been implemented.");
   }
 

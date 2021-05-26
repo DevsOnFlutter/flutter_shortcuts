@@ -48,3 +48,8 @@ android {
 flutter {
     source '../..'
 }
+
+dependencies {
+    implementation "androidx.core:core:1.6.0-beta01"
+    implementation 'androidx.core:core-google-shortcuts:1.0.0-beta01'
+}

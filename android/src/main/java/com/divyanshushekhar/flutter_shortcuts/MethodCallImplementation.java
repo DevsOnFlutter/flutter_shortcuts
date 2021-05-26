@@ -16,6 +16,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     private Activity activity;
 
     private boolean debug;
+    private boolean voiceAssistantVisibility;
 
     void debugPrint(String message) {
         if(debug) {
@@ -53,53 +57,58 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         this.activity = activity;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private ShortcutManager shortcutManager() {
+        return (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
+    }
+
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             result.success(null);
             return;
         }
-        ShortcutManager shortcutManager =
-                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
 
         switch (call.method) {
             case "initialize":
                 initialize(call);
                 break;
             case "getLaunchAction":
-                getLaunchAction(shortcutManager,result);
+                getLaunchAction(result);
                 break;
             case "getMaxShortcutLimit":
-                final int maxLimit = getMaxShortcutLimit();
-                result.success(maxLimit);
+                result.success(getMaxShortcutLimit());
                 break;
             case "getIconProperties":
-                Map<String,Integer> properties =  getIconProperties();
-                result.success(properties);
+                result.success(getIconProperties());
                 break;
             case "setShortcutItems":
-                setShortcutItems(call,shortcutManager);
+                setShortcutItems(call);
                 break;
             case "pushShortcutItem":
-                pushShortcutItem(call,shortcutManager);
+                pushShortcutItem(call);
                 break;
             case "pushShortcutItems":
-                pushShortcutItems(call,shortcutManager);
+                pushShortcutItems(call);
                 break;
             case "updateShortcutItems":
-                updateShortcutItems(call,shortcutManager);
+                updateShortcutItems(call);
                 break;
             case "updateShortcutItem":
-                updateShortcutItem(call,shortcutManager);
+                updateShortcutItem(call);
                 break;
             case "updateShortLabel":
-                updateShortLabel(call,shortcutManager);
+                updateShortLabel(call);
                 break;
             case "changeShortcutItemIcon":
-                changeShortcutItemIcon(call,shortcutManager);
+                changeShortcutItemIcon(call);
                 break;
             case "clearShortcutItems":
-                shortcutManager.removeAllDynamicShortcuts();
+                if(!this.voiceAssistantVisibility) {
+                    shortcutManager().removeAllDynamicShortcuts();
+                } else {
+                    ShortcutManagerCompat.removeAllDynamicShortcuts(context);
+                }
                 break;
             default:
                 result.notImplemented();
@@ -110,11 +119,12 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     private void initialize(MethodCall call) {
         List<Map<String, String>> args = call.arguments();
         this.debug = Boolean.parseBoolean(args.get(0).get("debug"));
+        this.voiceAssistantVisibility = Boolean.parseBoolean(args.get(0).get("voiceAssistantVisibility"));
         debugPrint("Flutter Shortcuts Initialized");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void getLaunchAction(ShortcutManager shortcutManager, MethodChannel.Result result) {
+    private void getLaunchAction(MethodChannel.Result result) {
         if (activity == null) {
             result.error(
                     "flutter_shortcuts_no_activity",
@@ -124,9 +134,16 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
         final Intent intent = activity.getIntent();
         final String launchAction = intent.getStringExtra(EXTRA_ACTION);
-        if (launchAction != null && !launchAction.isEmpty()) {
-            shortcutManager.reportShortcutUsed(launchAction);
-            intent.removeExtra(EXTRA_ACTION);
+        if(!this.voiceAssistantVisibility) {
+            if (launchAction != null && !launchAction.isEmpty()) {
+                shortcutManager().reportShortcutUsed(launchAction);
+                intent.removeExtra(EXTRA_ACTION);
+            }
+        } else {
+            if (launchAction != null && !launchAction.isEmpty()) {
+                ShortcutManagerCompat.reportShortcutUsed(context,launchAction);
+                intent.removeExtra(EXTRA_ACTION);
+            }
         }
         result.success(launchAction);
         debugPrint("Launch Action: " + launchAction);
@@ -134,125 +151,144 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private int getMaxShortcutLimit() {
-        ShortcutManager shortcutManager =
-                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
-        return shortcutManager.getMaxShortcutCountPerActivity();
+        if(!this.voiceAssistantVisibility) {
+            return shortcutManager().getMaxShortcutCountPerActivity();
+        }
+        return ShortcutManagerCompat.getMaxShortcutCountPerActivity(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private Map<String, Integer> getIconProperties() {
-        ShortcutManager shortcutManager =
-                (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         Map<String, Integer> properties = new HashMap<String, Integer>();
-        properties.put("maxHeight", shortcutManager.getIconMaxHeight());
-        properties.put("maxWidth", shortcutManager.getIconMaxWidth());
+        if(!this.voiceAssistantVisibility) {
+            properties.put("maxHeight", shortcutManager().getIconMaxHeight());
+            properties.put("maxWidth", shortcutManager().getIconMaxWidth());
+        } else {
+            properties.put("maxHeight", ShortcutManagerCompat.getIconMaxHeight(context));
+            properties.put("maxWidth", ShortcutManagerCompat.getIconMaxWidth(context));
+        }
         return properties;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void setShortcutItems(MethodCall call,ShortcutManager shortcutManager) {
+    private void setShortcutItems(MethodCall call) {
         List<Map<String, String>> args = call.arguments();
-        List<ShortcutInfo> shortcuts;
-        try {
-            shortcuts = processShortcuts(args);
-            shortcutManager.setDynamicShortcuts(shortcuts);
-            debugPrint("Shortcuts created");
-        } catch (Exception e) {
-            Log.e(TAG,e.toString());
+        if(!this.voiceAssistantVisibility) {
+            List<ShortcutInfo> shortcuts;
+            try {
+                shortcuts = shortcutInfoList(args);
+                shortcutManager().setDynamicShortcuts(shortcuts);
+                debugPrint("Shortcuts created");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
+        } else {
+            List<ShortcutInfoCompat> shortcuts;
+            try {
+                shortcuts = shortcutInfoCompatList(args);
+                ShortcutManagerCompat.setDynamicShortcuts(context,shortcuts);
+                debugPrint("Shortcuts created");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void pushShortcutItem(MethodCall call, ShortcutManager shortcutManager) {
+    private void pushShortcutItem(MethodCall call) {
         final List<Map<String, String>> args = call.arguments();
-        List<ShortcutInfo> shortcuts;
-        try {
-            shortcuts = processShortcuts(args);
-            shortcutManager.addDynamicShortcuts(shortcuts);
-            debugPrint("Shortcut pushed");
-        } catch (Exception e) {
-            Log.e(TAG,e.toString());
+        if(!this.voiceAssistantVisibility) {
+            List<ShortcutInfo> shortcuts;
+            try {
+                shortcuts = shortcutInfoList(args);
+                shortcutManager().addDynamicShortcuts(shortcuts);
+                debugPrint("Shortcut pushed");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
+        }else {
+            List<ShortcutInfoCompat> shortcuts;
+            try {
+                shortcuts = shortcutInfoCompatList(args);
+                ShortcutManagerCompat.addDynamicShortcuts(context,shortcuts);
+                debugPrint("Shortcut pushed");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void pushShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
+    private void pushShortcutItems(MethodCall call) {
         final List<Map<String, String>> args = call.arguments();
-        List<ShortcutInfo> shortcuts;
-        try {
-            shortcuts = processShortcuts(args);
-            shortcutManager.addDynamicShortcuts(shortcuts);
-            debugPrint("Shortcuts pushed");
-        } catch (Exception e) {
-            Log.e(TAG,e.toString());
+        if(!this.voiceAssistantVisibility) {
+            List<ShortcutInfo> shortcuts;
+            try {
+                shortcuts = shortcutInfoList(args);
+                shortcutManager().addDynamicShortcuts(shortcuts);
+                debugPrint("Shortcuts pushed");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
+        } else {
+            List<ShortcutInfoCompat> shortcuts;
+            try {
+                shortcuts = shortcutInfoCompatList(args);
+                ShortcutManagerCompat.addDynamicShortcuts(context,shortcuts);
+                debugPrint("Shortcuts pushed");
+            } catch (Exception e) {
+                Log.e(TAG,e.toString());
+            }
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void updateShortcutItems(MethodCall call, ShortcutManager shortcutManager) {
+    private void updateShortcutItems(MethodCall call) {
         List<Map<String, String>> args = call.arguments();
         boolean updated = false;
-        try {
-            List<ShortcutInfo> updateShortcuts = processShortcuts(args);
-            updated = shortcutManager.updateShortcuts(updateShortcuts);
-        } catch(Exception e) {
-            Log.e(TAG, e.toString());
-        }
-        if(updated) {
-            debugPrint("Shortcuts updated");
+        if(!this.voiceAssistantVisibility) {
+            try {
+                List<ShortcutInfo> updateShortcuts = shortcutInfoList(args);
+                updated = shortcutManager().updateShortcuts(updateShortcuts);
+            } catch(Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            if(updated) {
+                debugPrint("Shortcuts updated");
+            } else {
+                debugPrint("Unable to update shortcuts");
+            }
         } else {
-            debugPrint("Unable to update shortcuts");
+            try {
+                List<ShortcutInfoCompat> updateShortcuts = shortcutInfoCompatList(args);
+                updated = ShortcutManagerCompat.updateShortcuts(context,updateShortcuts);
+            } catch(Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            if(updated) {
+                debugPrint("Shortcuts updated");
+            } else {
+                debugPrint("Unable to update shortcuts");
+            }
         }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void updateShortcutItem(MethodCall call, ShortcutManager shortcutManager) {
+    private void updateShortcutItem(MethodCall call) {
         final List<Map<String, String>> args = call.arguments();
         Map<String, String> info = args.get(0);
         final String refId = info.get("id");
-        List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
-        final List<ShortcutInfo> shortcutList = new ArrayList<>();
-        int flag = 1;
-        for(ShortcutInfo si : dynamicShortcuts) {
-            if(si.getId().equalsIgnoreCase(refId))  {
-                ShortcutInfo shortcutInfo = createShortcutInfo(info);
-                shortcutList.add(shortcutInfo);
-                flag = 0;
-                continue;
-            }
-            shortcutList.add(si);
-        }
-        if (flag == 1) {
-            Log.e(TAG, "ID did not match any shortcut");
-            return;
-        }
-        try {
-            shortcutManager.updateShortcuts(shortcutList);
-            debugPrint("Shortcut updated");
-        } catch(Exception e) {
-            Log.e(TAG,e.toString());
-        }
-    }
-
-    private void updateShortLabel(MethodCall call, ShortcutManager shortcutManager) {
-        final List<String> args = call.arguments();
-        final String refId = args.get(0);
-        final String title = args.get(1);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private void changeShortcutItemIcon(MethodCall call, ShortcutManager shortcutManager) {
-        try {
-            final List<String> args = call.arguments();
-            final String refId = args.get(0);
-            final String changeIcon = args.get(1);
-            Map<String,String> items = deserializeShortcutInfoAtId(refId,changeIcon,shortcutManager);
-            ShortcutInfo shortcutInfo = createShortcutInfo(items);
-            List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+        if(!this.voiceAssistantVisibility) {
+            List<ShortcutInfo> dynamicShortcuts = shortcutManager().getDynamicShortcuts();
             final List<ShortcutInfo> shortcutList = new ArrayList<>();
             int flag = 1;
             for(ShortcutInfo si : dynamicShortcuts) {
                 if(si.getId().equalsIgnoreCase(refId))  {
+                    ShortcutInfo shortcutInfo = buildShortcutInfo(info);
                     shortcutList.add(shortcutInfo);
                     flag = 0;
                     continue;
@@ -264,20 +300,108 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 return;
             }
             try {
-                shortcutManager.updateShortcuts(shortcutList);
-                debugPrint("Shortcut Icon Changed.");
+                shortcutManager().updateShortcuts(shortcutList);
+                debugPrint("Shortcut updated");
             } catch(Exception e) {
                 Log.e(TAG,e.toString());
             }
+        } else {
+            List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
+            final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
+            int flag = 1;
+            for(ShortcutInfoCompat si : dynamicShortcuts) {
+                if(si.getId().equalsIgnoreCase(refId))  {
+                    ShortcutInfoCompat shortcutInfo = buildShortcutUsingCompat(info);
+                    shortcutList.add(shortcutInfo);
+                    flag = 0;
+                    continue;
+                }
+                shortcutList.add(si);
+            }
+            if (flag == 1) {
+                Log.e(TAG, "ID did not match any shortcut");
+                return;
+            }
+            try {
+                ShortcutManagerCompat.updateShortcuts(context,shortcutList);
+                debugPrint("Shortcut updated");
+            } catch(Exception e) {
+                Log.e(TAG,e.toString());
+            }
+        }
+
+    }
+
+    private void updateShortLabel(MethodCall call) {
+        final List<String> args = call.arguments();
+        final String refId = args.get(0);
+        final String title = args.get(1);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void changeShortcutItemIcon(MethodCall call) {
+        try {
+            final List<String> args = call.arguments();
+            final String refId = args.get(0);
+            final String changeIcon = args.get(1);
+            Map<String,String> items = deserializeShortcutInfoAtId(refId,changeIcon);
+            if(!this.voiceAssistantVisibility) {
+                ShortcutInfo shortcutInfo = buildShortcutInfo(items);
+                List<ShortcutInfo> dynamicShortcuts = shortcutManager().getDynamicShortcuts();
+                final List<ShortcutInfo> shortcutList = new ArrayList<>();
+                int flag = 1;
+                for(ShortcutInfo si : dynamicShortcuts) {
+                    if(si.getId().equalsIgnoreCase(refId))  {
+                        shortcutList.add(shortcutInfo);
+                        flag = 0;
+                        continue;
+                    }
+                    shortcutList.add(si);
+                }
+                if (flag == 1) {
+                    Log.e(TAG, "ID did not match any shortcut");
+                    return;
+                }
+                try {
+                    shortcutManager().updateShortcuts(shortcutList);
+                    debugPrint("Shortcut Icon Changed.");
+                } catch(Exception e) {
+                    Log.e(TAG,e.toString());
+                }
+            } else {
+                ShortcutInfoCompat shortcutInfo = buildShortcutUsingCompat(items);
+                List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
+                final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
+                int flag = 1;
+                for(ShortcutInfoCompat si : dynamicShortcuts) {
+                    if(si.getId().equalsIgnoreCase(refId))  {
+                        shortcutList.add(shortcutInfo);
+                        flag = 0;
+                        continue;
+                    }
+                    shortcutList.add(si);
+                }
+                if (flag == 1) {
+                    Log.e(TAG, "ID did not match any shortcut");
+                    return;
+                }
+                try {
+                    ShortcutManagerCompat.updateShortcuts(context,shortcutList);
+                    debugPrint("Shortcut Icon Changed.");
+                } catch(Exception e) {
+                    Log.e(TAG,e.toString());
+                }
+            }
+
         } catch(Exception e) {
             Log.e(TAG,e.toString());
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private Map<String,String> deserializeShortcutInfoAtId(String id, String icon, ShortcutManager shortcutManager) {
+    private Map<String,String> deserializeShortcutInfoAtId(String id, String icon) {
         HashMap<String, String> map = new HashMap<String, String>();
-        List<ShortcutInfo> dynamicShortcuts = shortcutManager.getDynamicShortcuts();
+        List<ShortcutInfo> dynamicShortcuts = shortcutManager().getDynamicShortcuts();
 
         for(ShortcutInfo si : dynamicShortcuts) {
             if(si.getId().equalsIgnoreCase(id))  {
@@ -291,29 +415,79 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private List<ShortcutInfo> processShortcuts(List<Map<String, String>> shortcuts) {
+    private List<ShortcutInfo> shortcutInfoList(List<Map<String, String>> shortcuts) {
         final List<ShortcutInfo> shortcutList = new ArrayList<>();
 
         for (Map<String, String> shortcut : shortcuts) {
-            ShortcutInfo shortcutInfo = createShortcutInfo(shortcut);
+            ShortcutInfo shortcutInfo = buildShortcutInfo(shortcut);
             shortcutList.add(shortcutInfo);
         }
         return shortcutList;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private ShortcutInfo createShortcutInfo(Map<String, String> shortcut) {
+    private List<ShortcutInfoCompat> shortcutInfoCompatList(List<Map<String, String>> shortcuts) {
+        final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
+
+        for (Map<String, String> shortcut : shortcuts) {
+            ShortcutInfoCompat shortcutInfoCompat = buildShortcutUsingCompat(shortcut);
+            shortcutList.add(shortcutInfoCompat);
+        }
+        return shortcutList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private ShortcutInfoCompat buildShortcutUsingCompat(Map<String, String> shortcut) {
         final String id = shortcut.get("id");
         final String icon = shortcut.get("icon");
         final String action = shortcut.get("action");
         final String shortLabel = shortcut.get("shortLabel");
         final String longLabel = shortcut.get("LongLabel");
         final int iconType = Integer.parseInt(Objects.requireNonNull(shortcut.get("shortcutIconType")));
-        final ShortcutInfo.Builder shortcutBuilder;
-        shortcutBuilder = new ShortcutInfo.Builder(context, id);
+
+
+        ShortcutInfoCompat.Builder shortcutInfoCompat = new ShortcutInfoCompat.Builder(context, id);
 
         final Intent intent = getIntentToOpenMainActivity(action);
 
+        if(longLabel != null) {
+            shortcutInfoCompat.setLongLabel(longLabel);
+        }
+        setIconCompat(iconType, icon,shortcutInfoCompat);
+
+        assert shortLabel!=null;
+        return shortcutInfoCompat
+                .setShortLabel(shortLabel)
+                .setIntent(intent)
+                .build();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private ShortcutInfo buildShortcutInfo(Map<String, String> shortcut) {
+        final String id = shortcut.get("id");
+        final String icon = shortcut.get("icon");
+        final String action = shortcut.get("action");
+        final String shortLabel = shortcut.get("shortLabel");
+        final String longLabel = shortcut.get("LongLabel");
+        final int iconType = Integer.parseInt(Objects.requireNonNull(shortcut.get("shortcutIconType")));
+
+        final ShortcutInfo.Builder shortcutBuilder = new ShortcutInfo.Builder(context, id);
+        final Intent intent = getIntentToOpenMainActivity(action);
+
+        if(longLabel != null) {
+            shortcutBuilder.setLongLabel(longLabel);
+        }
+
+        setIcon(iconType, icon,shortcutBuilder);
+
+        assert shortLabel!=null;
+        return shortcutBuilder
+                .setShortLabel(shortLabel)
+                .setIntent(intent)
+                .build();
+    }
+
+    private void setIcon(int iconType,String icon,ShortcutInfo.Builder shortcutBuilder) {
         // 0 - ShortcutIconType.androidAsset
         // 1 - ShortcutIconType.flutterAsset
         switch (iconType) {
@@ -326,18 +500,22 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             default:
                 break;
         }
-
-        if(longLabel != null) {
-            shortcutBuilder.setLongLabel(longLabel);
-        }
-
-        assert shortLabel!=null;
-        return shortcutBuilder
-                .setShortLabel(shortLabel)
-                .setIntent(intent)
-                .build();
     }
 
+    private void setIconCompat(int iconType,String icon,ShortcutInfoCompat.Builder shortcutBuilderCompat) {
+        // 0 - ShortcutIconType.androidAsset
+        // 1 - ShortcutIconType.flutterAsset
+        switch (iconType) {
+            case 0:
+                setIconFromNativeCompat(shortcutBuilderCompat, icon);
+                break;
+            case 1:
+                setIconFromFlutterCompat(shortcutBuilderCompat, icon);
+                break;
+            default:
+                break;
+        }
+    }
 
     private void setIconFromNative(ShortcutInfo.Builder shortcutBuilder, String icon) {
         final int resourceId = loadResourceId(context, icon);
@@ -348,9 +526,24 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
+    private void setIconFromNativeCompat(ShortcutInfoCompat.Builder shortcutBuilder, String icon) {
+        final int resourceId = loadResourceId(context, icon);
+        if (resourceId > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                shortcutBuilder.setIcon(IconCompat.createFromIcon(context,Icon.createWithResource(context, resourceId)));
+            }
+        }
+    }
+
     private void setIconFromFlutter(ShortcutInfo.Builder shortcutBuilder, String icon) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             shortcutBuilder.setIcon(getIconFromFlutterAsset(context,icon));
+        }
+    }
+
+    private void setIconFromFlutterCompat(ShortcutInfoCompat.Builder shortcutBuilder, String icon) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            shortcutBuilder.setIcon(IconCompat.createFromIcon(context,getIconFromFlutterAsset(context,icon)));
         }
     }
 
