@@ -20,6 +20,8 @@ import androidx.core.graphics.drawable.IconCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,9 +90,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 break;
             case "updateShortcutItem":
                 updateShortcutItem(call);
-                break;
-            case "updateShortLabel":
-                updateShortLabel(call);
                 break;
             case "changeShortcutItemIcon":
                 changeShortcutItemIcon(call);
@@ -229,12 +228,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
-    private void updateShortLabel(MethodCall call) {
-        final List<String> args = call.arguments();
-        final String refId = args.get(0);
-        final String title = args.get(1);
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private void changeShortcutItemIcon(MethodCall call) {
         try {
@@ -319,6 +312,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         return shortcutInfoCompat
                 .setShortLabel(shortLabel)
                 .setIntent(intent)
+                .addCapabilityBinding("actions.intent.OPEN_APP_FEATURE")
                 .build();
     }
 
