@@ -222,6 +222,20 @@ class _MyAppState extends State<MyApp> {
                   ],
                 ),
                 Divider(),
+                Text("Label"),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      child: Text("Change ShortLabel"),
+                      onPressed: () async {
+                        await flutterShortcuts.changeShortcutItemShortLabel(
+                          id: "2",
+                          shortLabel: "Resume Game",
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

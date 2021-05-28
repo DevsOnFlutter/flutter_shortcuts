@@ -90,6 +90,13 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
+  Future<void> changeShortcutItemShortLabel(
+      String id, String shortLabel) async {
+    await channel
+        .invokeMethod<void>('changeShortcutItemShortLabel', [id, shortLabel]);
+  }
+
+  @override
   Future<void> changeShortcutItemIcon(String id, String icon) async {
     await channel.invokeMethod<void>('changeShortcutItemIcon', [id, icon]);
   }
