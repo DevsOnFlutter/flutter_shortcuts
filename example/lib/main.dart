@@ -157,26 +157,27 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Add Shortcut"),
                       onPressed: () async {
                         await flutterShortcuts.pushShortcutItems(
-                            shortcutList: <FlutterShortcutItem>[
-                              const FlutterShortcutItem(
-                                id: "1",
-                                action: 'Home page new action',
-                                shortLabel: 'Home Page',
-                                icon: 'assets/icons/home.png',
-                              ),
-                              const FlutterShortcutItem(
-                                id: "2",
-                                action: 'Bookmark page new action',
-                                shortLabel: 'Bookmark Page',
-                                icon: 'assets/icons/bookmark.png',
-                              ),
-                              const FlutterShortcutItem(
-                                id: "3",
-                                action: 'Settings Action',
-                                shortLabel: 'Setting',
-                                icon: 'assets/icons/settings.png',
-                              ),
-                            ]);
+                          shortcutList: <FlutterShortcutItem>[
+                            const FlutterShortcutItem(
+                              id: "1",
+                              action: 'Home page new action',
+                              shortLabel: 'Home Page',
+                              icon: 'assets/icons/home.png',
+                            ),
+                            const FlutterShortcutItem(
+                              id: "2",
+                              action: 'Bookmark page new action',
+                              shortLabel: 'Bookmark Page',
+                              icon: 'assets/icons/bookmark.png',
+                            ),
+                            const FlutterShortcutItem(
+                              id: "3",
+                              action: 'Settings Action',
+                              shortLabel: 'Setting',
+                              icon: 'assets/icons/settings.png',
+                            ),
+                          ],
+                        );
                       },
                     ),
                     ElevatedButton(

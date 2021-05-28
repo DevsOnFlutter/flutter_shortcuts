@@ -1,5 +1,6 @@
 package com.divyanshushekhar.flutter_shortcuts;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +21,6 @@ import androidx.core.graphics.drawable.IconCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +55,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         this.activity = activity;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
@@ -96,6 +96,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
                 break;
             case "clearShortcutItems":
                 ShortcutManagerCompat.removeAllDynamicShortcuts(context);
+                debugPrint("Removed all shortcuts.");
                 break;
             default:
                 result.notImplemented();
@@ -228,20 +229,24 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    @SuppressLint("RestrictedApi")
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void changeShortcutItemIcon(MethodCall call) {
         try {
             final List<String> args = call.arguments();
             final String refId = args.get(0);
             final String changeIcon = args.get(1);
-            Map<String,String> items = deserializeShortcutInfoAtId(refId,changeIcon);
-            ShortcutInfoCompat shortcutInfo = buildShortcutUsingCompat(items);
+            Map<String,String> items = shortcutWithoutIcon(refId);
+            ShortcutInfoCompat.Builder shortcutInfo = createShortcutInfoUsingIconResID(items);
+            Icon icon = getIconFromFlutterAsset(context,changeIcon);
             List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
+
             final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
             int flag = 1;
             for(ShortcutInfoCompat si : dynamicShortcuts) {
                 if(si.getId().equalsIgnoreCase(refId))  {
-                    shortcutList.add(shortcutInfo);
+                    IconCompat iconCompat = IconCompat.createFromIcon(context,icon);
+                    shortcutList.add(shortcutInfo.setIcon(iconCompat).build());
                     flag = 0;
                     continue;
                 }
@@ -262,19 +267,45 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
+
+    /* ********************   Utility Functions   ********************* */
+
+    @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
-    private Map<String,String> deserializeShortcutInfoAtId(String id, String icon) {
+    private Map<String,String> shortcutWithoutIcon(String id) {
         HashMap<String, String> map = new HashMap<String, String>();
         List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
         for(ShortcutInfoCompat si : dynamicShortcuts) {
             if(si.getId().equalsIgnoreCase(id))  {
                 map.put("id", si.getId());
-                map.put("shortLabel", String.valueOf(si.getShortLabel()));
-                map.put("icon", icon);
+                map.put("shortLabel", (String) si.getShortLabel());
+                map.put("longLabel", (String) si.getLongLabel());
                 map.put("action",si.getIntent().getStringExtra(EXTRA_ACTION));
             }
         }
         return map;
+    }
+
+    @SuppressLint("RestrictedApi")
+    private ShortcutInfoCompat.Builder createShortcutInfoUsingIconResID(Map<String, String> shortcut) {
+        final String id = shortcut.get("id");
+        final String action = shortcut.get("action");
+        final String shortLabel = shortcut.get("shortLabel");
+        final String longLabel = shortcut.get("LongLabel");
+
+        assert id != null;
+        ShortcutInfoCompat.Builder shortcutInfoCompat = new ShortcutInfoCompat.Builder(context, id);
+
+        final Intent intent = getIntentToOpenMainActivity(action);
+
+        if(longLabel != null) {
+            shortcutInfoCompat.setLongLabel(longLabel);
+        }
+
+        return shortcutInfoCompat
+                .setShortLabel(shortLabel)
+                .setIntent(intent);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
@@ -297,7 +328,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         final String longLabel = shortcut.get("LongLabel");
         final int iconType = Integer.parseInt(Objects.requireNonNull(shortcut.get("shortcutIconType")));
 
-
         assert id != null;
         ShortcutInfoCompat.Builder shortcutInfoCompat = new ShortcutInfoCompat.Builder(context, id);
 
@@ -312,7 +342,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         return shortcutInfoCompat
                 .setShortLabel(shortLabel)
                 .setIntent(intent)
-                .addCapabilityBinding("actions.intent.OPEN_APP_FEATURE")
                 .build();
     }
 
