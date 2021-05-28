@@ -20,13 +20,9 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   MethodChannel get channel => _channel;
 
   @override
-  Future<void> initialize(
-    bool debug,
-    bool voiceAssistantVisibility,
-  ) async {
+  Future<void> initialize(bool debug) async {
     Map<String, String> initValue = {
       'debug': kReleaseMode ? false.toString() : debug.toString(),
-      'voiceAssistantVisibility': voiceAssistantVisibility.toString(),
     };
     await channel.invokeMethod('initialize', [initValue]);
   }

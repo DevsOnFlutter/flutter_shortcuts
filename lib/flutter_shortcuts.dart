@@ -17,14 +17,8 @@ export 'package:flutter_shortcuts/src/helper/helper.dart';
 
 class FlutterShortcuts {
   /// [initialize] initializes the flutter_shortcuts plugin.
-  Future<void> initialize({
-    bool debug = true,
-    bool voiceAssistantVisibility = true,
-  }) async {
-    FlutterShortcutsPlatform.instance.initialize(
-      debug,
-      voiceAssistantVisibility,
-    );
+  Future<void> initialize({bool debug = true}) async {
+    FlutterShortcutsPlatform.instance.initialize(debug);
   }
 
   /// [listenAction] performs action when shortcut is initiated.
