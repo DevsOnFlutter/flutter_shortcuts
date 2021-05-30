@@ -77,13 +77,14 @@ class FlutterShortcuts {
     return FlutterShortcutsPlatform.instance.updateShortcutItem(shortcut);
   }
 
-  Future<void> changeShortcutItemShortLabel({
-    required String id,
-    required String shortLabel,
-  }) async {
-    return FlutterShortcutsPlatform.instance
-        .changeShortcutItemShortLabel(id, shortLabel);
-  }
+  // Future<void> changeShortcutItemLabel({
+  //   required String id,
+  //   String? shortLabel,
+  //   String? longLabel,
+  // }) async {
+  //   return FlutterShortcutsPlatform.instance
+  //       .changeShortcutItemLabel(id, shortLabel, longLabel);
+  // }
 
   /// [changeShortcutItemIcon] will change the icon of the shortcut based on id.
   /// If the ID of the shortcut is not same, no changes will be reflected.

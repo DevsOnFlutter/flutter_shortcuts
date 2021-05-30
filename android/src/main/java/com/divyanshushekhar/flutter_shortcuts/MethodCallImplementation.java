@@ -91,9 +91,9 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             case "updateShortcutItem":
                 updateShortcutItem(call);
                 break;
-            case "changeShortcutItemShortLabel":
-                changeShortcutItemShortLabel(call);
-                break;
+//            case "changeShortcutItemLabel":
+//                changeShortcutItemLabel(call);
+//                break;
             case "changeShortcutItemIcon":
                 changeShortcutItemIcon(call);
                 break;
@@ -238,41 +238,63 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @SuppressLint("RestrictedApi")
-    private void changeShortcutItemShortLabel(MethodCall call) {
-        final List<String> args = call.arguments();
-        final String refId = args.get(0);
-        final String shortLabel = args.get(1);
-
-        List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
-        final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
-
-        int flag = 1;
-        for(ShortcutInfoCompat si : dynamicShortcuts) {
-            String id = si.getId();
-            if(id.equals(refId))  {
-                String longLabel = (String) si.getLongLabel();
-                ShortcutInfoCompat.Builder shortcutInfoCompat = buildShortcutUsingCompat(id,null,null,shortLabel,longLabel,0);
-                shortcutInfoCompat.setIcon(si.getIcon()).setIntent(si.getIntent());
-                shortcutList.add(shortcutInfoCompat.build());
-                flag = 0;
-                continue;
-            }
-            shortcutList.add(si);
-        }
-
-        if (flag == 1) {
-            Log.e(TAG, "ID did not match any shortcut");
-            return;
-        }
-        try {
-            ShortcutManagerCompat.updateShortcuts(context,shortcutList);
-            debugPrint("Shortcut Short Label Changed.");
-        } catch(Exception e) {
-            Log.e(TAG,e.toString());
-        }
-    }
+//    @SuppressLint("RestrictedApi")
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    private  void changeShortcutItemLabel(MethodCall call) {
+//        try {
+//            final List<String> args = call.arguments();
+//            final String refId = args.get(0);
+//            final String shortLabel = args.get(1);
+//            final String longLabel = args.get(2);
+//
+////            Icon icon = getIconFromFlutterAsset(context,"assets/icons/next.png");
+////            IconCompat iconCompat = IconCompat.createFromIcon(context,icon);
+//
+//            List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
+//            final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
+//
+//            int flag = 1;
+//            for(ShortcutInfoCompat si : dynamicShortcuts) {
+//                String id = si.getId();
+//                if(id.equals(refId))  {
+//
+//                    ShortcutInfoCompat.Builder shortcutInfo = buildShortcutUsingCompat(id,null,null,null,null,0);
+//                    shortcutInfo.setIntent(si.getIntent());
+//
+//                    if(shortLabel != null ) {
+//                        shortcutInfo.setShortLabel("Changed Label");
+//                    } else {
+//                        shortcutInfo.setShortLabel(si.getShortLabel());
+//                    }
+//
+//                    if(longLabel != null) {
+//                        shortcutInfo.setLongLabel(longLabel);
+//                    } else if(si.getLongLabel() != null) {
+//                        shortcutInfo.setLongLabel(si.getLongLabel());
+//                    }
+//
+//                    shortcutInfo.setIcon(si.getIcon());
+//
+//                    shortcutList.add(shortcutInfo.build());
+//                    flag = 0;
+//                    continue;
+//                }
+//                shortcutList.add(si);
+//            }
+//            if (flag == 1) {
+//                Log.e(TAG, "ID did not match any shortcut");
+//                return;
+//            }
+//            try {
+//                ShortcutManagerCompat.updateShortcuts(context,shortcutList);
+//                debugPrint("Shortcut Label Changed.");
+//            } catch(Exception e) {
+//                Log.e(TAG,e.toString());
+//            }
+//        } catch(Exception e) {
+//            Log.e(TAG,e.toString());
+//        }
+//    }
 
     @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -342,8 +364,8 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         assert id != null;
         ShortcutInfoCompat.Builder shortcutInfoCompat = new ShortcutInfoCompat.Builder(context, id);
 
-        Intent intent = null;
         if(action != null) {
+            Intent intent;
             intent = getIntentToOpenMainActivity(action);
             shortcutInfoCompat.setIntent(intent);
         }
