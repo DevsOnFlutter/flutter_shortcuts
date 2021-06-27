@@ -1,3 +1,8 @@
+## v1.2.1
+
+* **Optimised Shortcuts**
+* Readme updated
+  
 ## v1.2.0
 
 * **Breaking Change** renamed `initialize` to `listenAction`.
