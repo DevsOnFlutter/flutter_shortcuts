@@ -1,8 +1,8 @@
 # Flutter Shortcuts
 
-<img src="https://i.imgur.com/462Y6wf.gif" title="source: imgur.com" />
+<img src="https://i.imgur.com/462Y6wf.gif" title="Flutter_Shortcuts" />
 
-![GitHub](https://img.shields.io/github/license/divshekhar/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/divshekhar/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/divshekhar/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/divshekhar/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/divshekhar/flutter_shortcuts?style=plastic) ![GitHub issues](https://img.shields.io/github/issues/divshekhar/flutter_shortcuts?style=plastic) ![GitHub Repo stars](https://img.shields.io/github/stars/divshekhar/flutter_shortcuts?style=social) ![GitHub forks](https://img.shields.io/github/forks/divshekhar/flutter_shortcuts?style=social)
+![GitHub](https://img.shields.io/github/license/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub issues](https://img.shields.io/github/issues/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub Repo stars](https://img.shields.io/github/stars/DevsOnFlutter/flutter_shortcuts?style=social) ![GitHub forks](https://img.shields.io/github/forks/DevsOnFlutter/flutter_shortcuts?style=social)
 
 ## Show some :heart: and :star: the repo
 
@@ -254,7 +254,7 @@ print( "maxHeight: ${result["maxHeight"]}, maxWidth: ${result["maxWidth"]}");
 
 <a href="https://twitter.com/SubhamPraharaj6"><img src="https://github.com/aritraroy/social-icons/blob/master/twitter-icon.png?raw=true" width="60"></a> <a href="https://www.linkedin.com/in/subham-praharaj-66b172179/"><img src="https://github.com/aritraroy/social-icons/blob/master/linkedin-icon.png?raw=true" width="60"></a> <a href="https://instagram.com/the_champ_subham_865"><img src="https://github.com/aritraroy/social-icons/blob/master/instagram-icon.png?raw=true" width="60"></a>
 
-[![GitHub followers](https://img.shields.io/github/followers/thechamp865-skp.svg?style=social&label=Follow)](https://github.com/thechamp865-skp/)
+[![GitHub followers](https://img.shields.io/github/followers/skpraharaj.svg?style=social&label=Follow)](https://github.com/skpraharaj/)
 
 ## Contributions
 
