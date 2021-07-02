@@ -1,3 +1,7 @@
+## v1.2.2
+
+* Compatibility added in Readme
+
 ## v1.2.1
 
 * **Optimised Shortcuts**
