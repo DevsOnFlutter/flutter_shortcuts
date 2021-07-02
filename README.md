@@ -4,6 +4,11 @@
 
 ![GitHub](https://img.shields.io/github/license/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub issues](https://img.shields.io/github/issues/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub Repo stars](https://img.shields.io/github/stars/DevsOnFlutter/flutter_shortcuts?style=social) ![GitHub forks](https://img.shields.io/github/forks/DevsOnFlutter/flutter_shortcuts?style=social)
 
+##  Compatibility
+
+✅ &nbsp; Android </br>
+❌ &nbsp; iOS (active issue: [iOS support for quick actions](https://github.com/DevsOnFlutter/flutter_shortcuts/issues/1))
+
 ## Show some :heart: and :star: the repo
 
 ## Why use Flutter Shortcuts?
