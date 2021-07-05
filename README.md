@@ -281,6 +281,13 @@ Describe the use-case.
 
 * A hook will not be merged unles fully tested, to avoid breaking it inadvertendly
   in the future.
+  
+## Stargazers
+[![Stargazers repo roster for @DevsOnFlutter/flutter_shortcuts](https://reporoster.com/stars/dark/DevsOnFlutter/flutter_shortcuts)](https://github.com/DevsOnFlutter/flutter_shortcuts/stargazers)
+
+## Forkers
+
+[![Forkers repo roster for @DevsOnFlutter/flutter_shortcuts](https://reporoster.com/forks/dark/DevsOnFlutter/flutter_shortcuts)](https://github.com/DevsOnFlutter/flutter_shortcuts/network/members)
 
 ## Copyright & License
 
