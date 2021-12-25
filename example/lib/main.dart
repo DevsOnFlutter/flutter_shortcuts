@@ -221,31 +221,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ],
                 ),
-                Divider(),
-                // Text("Label"),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton(
-                //       child: Text("Change ShortLabel"),
-                //       onPressed: () async {
-                //         await flutterShortcuts.changeShortcutItemLabel(
-                //           id: "1",
-                //           shortLabel: "Resume Game",
-                //         );
-                //       },
-                //     ),
-                //     ElevatedButton(
-                //       child: Text("Change longLabel"),
-                //       onPressed: () async {
-                //         await flutterShortcuts.changeShortcutItemLabel(
-                //           id: "2",
-                //           longLabel: "Long label for shortcut item with id '2'",
-                //         );
-                //       },
-                //     ),
-                //   ],
-                // ),
+                
               ],
             ),
           ),

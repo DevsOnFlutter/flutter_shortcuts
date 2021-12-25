@@ -91,9 +91,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             case "updateShortcutItem":
                 updateShortcutItem(call);
                 break;
-//            case "changeShortcutItemLabel":
-//                changeShortcutItemLabel(call);
-//                break;
             case "changeShortcutItemIcon":
                 changeShortcutItemIcon(call);
                 break;
@@ -219,7 +216,8 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         int flag = 1;
         for(ShortcutInfoCompat si : dynamicShortcuts) {
             if(si.getId().equals(id))  {
-                ShortcutInfoCompat.Builder shortcutInfo = buildShortcutUsingCompat(id,icon,action,shortLabel,longLabel,iconType);
+                ShortcutInfoCompat.Builder shortcutInfo = buildShortcutUsingCompat(
+                        id,icon,action,shortLabel,longLabel,iconType);
                 shortcutList.add(shortcutInfo.build());
                 flag = 0;
                 continue;
@@ -237,64 +235,6 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             Log.e(TAG,e.toString());
         }
     }
-
-//    @SuppressLint("RestrictedApi")
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    private  void changeShortcutItemLabel(MethodCall call) {
-//        try {
-//            final List<String> args = call.arguments();
-//            final String refId = args.get(0);
-//            final String shortLabel = args.get(1);
-//            final String longLabel = args.get(2);
-//
-////            Icon icon = getIconFromFlutterAsset(context,"assets/icons/next.png");
-////            IconCompat iconCompat = IconCompat.createFromIcon(context,icon);
-//
-//            List<ShortcutInfoCompat> dynamicShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context);
-//            final List<ShortcutInfoCompat> shortcutList = new ArrayList<>();
-//
-//            int flag = 1;
-//            for(ShortcutInfoCompat si : dynamicShortcuts) {
-//                String id = si.getId();
-//                if(id.equals(refId))  {
-//
-//                    ShortcutInfoCompat.Builder shortcutInfo = buildShortcutUsingCompat(id,null,null,null,null,0);
-//                    shortcutInfo.setIntent(si.getIntent());
-//
-//                    if(shortLabel != null ) {
-//                        shortcutInfo.setShortLabel("Changed Label");
-//                    } else {
-//                        shortcutInfo.setShortLabel(si.getShortLabel());
-//                    }
-//
-//                    if(longLabel != null) {
-//                        shortcutInfo.setLongLabel(longLabel);
-//                    } else if(si.getLongLabel() != null) {
-//                        shortcutInfo.setLongLabel(si.getLongLabel());
-//                    }
-//
-//                    shortcutInfo.setIcon(si.getIcon());
-//
-//                    shortcutList.add(shortcutInfo.build());
-//                    flag = 0;
-//                    continue;
-//                }
-//                shortcutList.add(si);
-//            }
-//            if (flag == 1) {
-//                Log.e(TAG, "ID did not match any shortcut");
-//                return;
-//            }
-//            try {
-//                ShortcutManagerCompat.updateShortcuts(context,shortcutList);
-//                debugPrint("Shortcut Label Changed.");
-//            } catch(Exception e) {
-//                Log.e(TAG,e.toString());
-//            }
-//        } catch(Exception e) {
-//            Log.e(TAG,e.toString());
-//        }
-//    }
 
     @SuppressLint("RestrictedApi")
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -351,15 +291,27 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             final String action = shortcut.get("action");
             final String shortLabel = shortcut.get("shortLabel");
             final String longLabel = shortcut.get("LongLabel");
-            final int iconType = Integer.parseInt(Objects.requireNonNull(shortcut.get("shortcutIconType")));
-            ShortcutInfoCompat.Builder shortcutInfoCompat = buildShortcutUsingCompat(id,icon,action,shortLabel,longLabel,iconType);
+            final int iconType = Integer.parseInt(Objects.requireNonNull(
+                    shortcut.get("shortcutIconType")));
+            ShortcutInfoCompat.Builder shortcutInfoCompat = buildShortcutUsingCompat(
+                                                            id,
+                                                            icon,
+                                                            action,
+                                                            shortLabel,
+                                                            longLabel,
+                                                            iconType);
             shortcutList.add(shortcutInfoCompat.build());
         }
         return shortcutList;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private ShortcutInfoCompat.Builder buildShortcutUsingCompat(String id, String icon, String action, String shortLabel, String longLabel, int iconType) {
+    private ShortcutInfoCompat.Builder buildShortcutUsingCompat(String id,
+                                                                String icon,
+                                                                String action,
+                                                                String shortLabel,
+                                                                String longLabel,
+                                                                int iconType) {
 
         assert id != null;
         ShortcutInfoCompat.Builder shortcutInfoCompat = new ShortcutInfoCompat.Builder(context, id);
