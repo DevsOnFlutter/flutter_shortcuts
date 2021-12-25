@@ -141,7 +141,7 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
 
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private Map<String, Integer> getIconProperties() {
-        Map<String, Integer> properties = new HashMap<String, Integer>();
+        Map<String, Integer> properties = new HashMap<>();
         properties.put("maxHeight", ShortcutManagerCompat.getIconMaxHeight(context));
         properties.put("maxWidth", ShortcutManagerCompat.getIconMaxWidth(context));
         return properties;
