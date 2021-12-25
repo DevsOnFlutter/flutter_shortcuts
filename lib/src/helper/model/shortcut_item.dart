@@ -10,11 +10,11 @@ for more details.
 
 import '../enums/shortcut_icon_asset.dart';
 
-class FlutterShortcutItem {
-  /// Create a flutter shortcut item.
+class ShortcutItem {
+  /// Create a shortcut item.
   /// Eg.
   /// ```dart
-  /// const FlutterShortcutItem(
+  /// const ShortcutItem(
   ///   id: "1",
   ///   action: 'Home page action',
   ///   shortLabel: 'Home Page',
@@ -22,7 +22,7 @@ class FlutterShortcutItem {
   /// );
   /// ```
 
-  const FlutterShortcutItem({
+  const ShortcutItem({
     required this.id,
     required this.action,
     required this.shortLabel,
