@@ -22,7 +22,7 @@ class FlutterShortcuts {
   }
 
   /// [listenAction] performs action when shortcut is initiated.
-  Future<void> listenAction(FlutterShortcutAction action) async {
+  Future<void> listenAction(ShortcutAction action) async {
     FlutterShortcutsPlatform.instance.listenAction(action);
   }
 
@@ -40,7 +40,7 @@ class FlutterShortcuts {
 
   /// [setShortcutItems] will set all the shortcut items.
   Future<void> setShortcutItems(
-      {required List<FlutterShortcutItem> shortcutItems}) async {
+      {required List<ShortcutItem> shortcutItems}) async {
     return FlutterShortcutsPlatform.instance.setShortcutItems(shortcutItems);
   }
 
@@ -52,28 +52,27 @@ class FlutterShortcuts {
   /// [pushShortcutItem] will push a new shortcut item.
   /// If there is already a dynamic or pinned shortcut with the same ID,
   /// the shortcut will be updated and pushed at the end of the shortcut list.
-  Future<void> pushShortcutItem({required FlutterShortcutItem shortcut}) async {
+  Future<void> pushShortcutItem({required ShortcutItem shortcut}) async {
     return FlutterShortcutsPlatform.instance.pushShortcutItem(shortcut);
   }
 
   /// [pushShortcutItems] updates dynamic or pinned shortcuts with same IDs
   /// and pushes new shortcuts with different IDs.
   Future<void> pushShortcutItems(
-      {required List<FlutterShortcutItem> shortcutList}) async {
+      {required List<ShortcutItem> shortcutList}) async {
     return FlutterShortcutsPlatform.instance.pushShortcutItems(shortcutList);
   }
 
   /// [updateShortcutItems] updates shortcut items.
   /// If the IDs of the shortcuts are not same, no changes will be reflected.
   Future<void> updateShortcutItems(
-      {required List<FlutterShortcutItem> shortcutList}) async {
+      {required List<ShortcutItem> shortcutList}) async {
     return FlutterShortcutsPlatform.instance.updateShortcutItems(shortcutList);
   }
 
   /// [updateShortcutItem] updates a single shortcut item based on id.
   /// If the ID of the shortcut is not same, no changes will be reflected.
-  Future<void> updateShortcutItem(
-      {required FlutterShortcutItem shortcut}) async {
+  Future<void> updateShortcutItem({required ShortcutItem shortcut}) async {
     return FlutterShortcutsPlatform.instance.updateShortcutItem(shortcut);
   }
 

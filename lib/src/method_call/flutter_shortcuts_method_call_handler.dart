@@ -28,7 +28,7 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
-  Future<void> listenAction(FlutterShortcutAction actionHandler) async {
+  Future<void> listenAction(ShortcutAction actionHandler) async {
     channel.setMethodCallHandler((MethodCall call) async {
       assert(call.method == 'launch');
       actionHandler(call.arguments);
@@ -52,7 +52,7 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
-  Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> setShortcutItems(List<ShortcutItem> items) async {
     final List<Map<String, dynamic>> itemsList =
         items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('setShortcutItems', itemsList);
@@ -64,27 +64,27 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
   }
 
   @override
-  Future<void> pushShortcutItem(FlutterShortcutItem shortcut) async {
+  Future<void> pushShortcutItem(ShortcutItem shortcut) async {
     final Map<String, dynamic> item = shortcut.serialize();
     await channel.invokeMethod<void>('pushShortcutItem', [item]);
   }
 
   @override
-  Future<void> pushShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> pushShortcutItems(List<ShortcutItem> items) async {
     final List<Map<String, dynamic>> itemsList =
         items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('pushShortcutItems', itemsList);
   }
 
   @override
-  Future<void> updateShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> updateShortcutItems(List<ShortcutItem> items) async {
     final List<Map<String, dynamic>> itemsList =
         items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('updateShortcutItems', itemsList);
   }
 
   @override
-  Future<void> updateShortcutItem(FlutterShortcutItem shortcut) async {
+  Future<void> updateShortcutItem(ShortcutItem shortcut) async {
     final Map<String, dynamic> item = shortcut.serialize();
     await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }

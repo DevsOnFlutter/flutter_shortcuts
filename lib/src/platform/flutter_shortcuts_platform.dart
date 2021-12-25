@@ -32,7 +32,7 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("initialize() has not been implemented.");
   }
 
-  Future<void> listenAction(FlutterShortcutAction action) async {
+  Future<void> listenAction(ShortcutAction action) async {
     throw UnimplementedError("listenAction() has not been implemented.");
   }
 
@@ -44,7 +44,7 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("getIconProperties() has not been implemented.");
   }
 
-  Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> setShortcutItems(List<ShortcutItem> items) async {
     throw UnimplementedError("setShortcutItems() has not been implemented.");
   }
 
@@ -52,19 +52,19 @@ abstract class FlutterShortcutsPlatform extends PlatformInterface {
     throw UnimplementedError("clearShortcutItems() has not been implemented.");
   }
 
-  Future<void> pushShortcutItem(FlutterShortcutItem shortcut) async {
+  Future<void> pushShortcutItem(ShortcutItem shortcut) async {
     throw UnimplementedError("pushShortcutItem() has not been implemented.");
   }
 
-  Future<void> pushShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> pushShortcutItems(List<ShortcutItem> items) async {
     throw UnimplementedError("pushShortcutItems() has not been implemented.");
   }
 
-  Future<void> updateShortcutItems(List<FlutterShortcutItem> items) async {
+  Future<void> updateShortcutItems(List<ShortcutItem> items) async {
     throw UnimplementedError("updateShortcutItems() has not been implemented.");
   }
 
-  Future<void> updateShortcutItem(FlutterShortcutItem shortcut) async {
+  Future<void> updateShortcutItem(ShortcutItem shortcut) async {
     throw UnimplementedError("updateShortcutItem() has not been implemented.");
   }
 
