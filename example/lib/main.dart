@@ -221,7 +221,44 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ],
                 ),
-                
+                Text("Conversation Shortcuts"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      child: Text("Set conversation Shortcut"),
+                      onPressed: () async {
+                        await flutterShortcuts.pushShortcutItems(
+                          shortcutList: <FlutterShortcutItem>[
+                            const FlutterShortcutItem(
+                              id: "1",
+                              action: 'open_chat_1',
+                              shortLabel: 'Divyanshu Shekhar',
+                              icon: 'assets/icons/home.png',
+                              conversationShortcut: true,
+                              isImportant: true,
+                            ),
+                            const FlutterShortcutItem(
+                              id: "2",
+                              action: 'oepn_chat_2',
+                              shortLabel: 'Subham Praharaj',
+                              icon: 'assets/icons/bookmark.png',
+                              conversationShortcut: true,
+                            ),
+                            const FlutterShortcutItem(
+                              id: "3",
+                              action: 'oepn_chat_3',
+                              shortLabel: 'Auto Reply Bot',
+                              icon: 'assets/icons/url.png',
+                              conversationShortcut: true,
+                              isBot: true,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

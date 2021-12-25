@@ -53,8 +53,8 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
 
   @override
   Future<void> setShortcutItems(List<FlutterShortcutItem> items) async {
-    final List<Map<String, String?>> itemsList =
-        items.map(_serializeItem).toList();
+    final List<Map<String, dynamic>> itemsList =
+        items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('setShortcutItems', itemsList);
   }
 
@@ -65,43 +65,32 @@ class FlutterShortcutsMethodCallHandler extends FlutterShortcutsPlatform {
 
   @override
   Future<void> pushShortcutItem(FlutterShortcutItem shortcut) async {
-    final Map<String, String?> item = _serializeItem(shortcut);
+    final Map<String, dynamic> item = shortcut.serialize();
     await channel.invokeMethod<void>('pushShortcutItem', [item]);
   }
 
   @override
   Future<void> pushShortcutItems(List<FlutterShortcutItem> items) async {
-    final List<Map<String, String?>> itemsList =
-        items.map(_serializeItem).toList();
+    final List<Map<String, dynamic>> itemsList =
+        items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('pushShortcutItems', itemsList);
   }
 
   @override
   Future<void> updateShortcutItems(List<FlutterShortcutItem> items) async {
-    final List<Map<String, String?>> itemsList =
-        items.map(_serializeItem).toList();
+    final List<Map<String, dynamic>> itemsList =
+        items.map((item) => item.serialize()).toList();
     await channel.invokeMethod<void>('updateShortcutItems', itemsList);
   }
 
   @override
   Future<void> updateShortcutItem(FlutterShortcutItem shortcut) async {
-    final Map<String, String?> item = _serializeItem(shortcut);
+    final Map<String, dynamic> item = shortcut.serialize();
     await channel.invokeMethod<void>('updateShortcutItem', [item]);
   }
 
   @override
   Future<void> changeShortcutItemIcon(String id, String icon) async {
     await channel.invokeMethod<void>('changeShortcutItemIcon', [id, icon]);
-  }
-
-  Map<String, String?> _serializeItem(FlutterShortcutItem item) {
-    return <String, String?>{
-      'id': item.id,
-      'action': item.action,
-      'shortLabel': item.shortLabel,
-      'longLabel': item.longLabel,
-      'icon': item.icon,
-      'shortcutIconType': item.shortcutIconAsset.index.toString(),
-    };
   }
 }
