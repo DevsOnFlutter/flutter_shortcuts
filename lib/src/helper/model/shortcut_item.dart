@@ -10,11 +10,11 @@ for more details.
 
 import '../enums/shortcut_icon_asset.dart';
 
-class FlutterShortcutItem {
-  /// Create a flutter shortcut item.
+class ShortcutItem {
+  /// Create a shortcut item.
   /// Eg.
   /// ```dart
-  /// const FlutterShortcutItem(
+  /// const ShortcutItem(
   ///   id: "1",
   ///   action: 'Home page action',
   ///   shortLabel: 'Home Page',
@@ -22,13 +22,16 @@ class FlutterShortcutItem {
   /// );
   /// ```
 
-  const FlutterShortcutItem({
+  const ShortcutItem({
     required this.id,
     required this.action,
     required this.shortLabel,
     this.shortcutIconAsset = ShortcutIconAsset.flutterAsset,
     this.longLabel,
     this.icon,
+    this.conversationShortcut = false,
+    this.isImportant = false,
+    this.isBot = false,
   });
 
   /// ID of the shortcut that differentiates it from other shortcuts.
@@ -48,4 +51,27 @@ class FlutterShortcutItem {
 
   /// `ShortcutIconType.androidAsset` or `ShortcutIconType.flutterAsset`
   final ShortcutIconAsset shortcutIconAsset;
+
+  /// `true` if the shortcut is a person.
+  final bool conversationShortcut;
+
+  /// true if the person shortcut is a person
+  final bool isImportant;
+
+  /// true if the person shortcut is a machine/bot
+  final bool isBot;
+
+  Map<String, dynamic> serialize() {
+    return <String, dynamic>{
+      'id': id,
+      'action': action,
+      'shortLabel': shortLabel,
+      'longLabel': longLabel,
+      'icon': icon,
+      'shortcutIconType': shortcutIconAsset.index.toString(),
+      'conversationShortcut': conversationShortcut,
+      'isImportant': isImportant,
+      'isBot': isBot,
+    };
+  }
 }

@@ -76,14 +76,14 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Set Shortcuts"),
                       onPressed: () async {
                         await flutterShortcuts.setShortcutItems(
-                          shortcutItems: <FlutterShortcutItem>[
-                            const FlutterShortcutItem(
+                          shortcutItems: <ShortcutItem>[
+                            const ShortcutItem(
                               id: "1",
                               action: 'Home page action',
                               shortLabel: 'Home Page',
                               icon: 'assets/icons/home.png',
                             ),
-                            const FlutterShortcutItem(
+                            const ShortcutItem(
                               id: "2",
                               action: 'Bookmark page action',
                               shortLabel: 'Bookmark Page',
@@ -118,7 +118,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text("push Shortcut Item"),
                       onPressed: () async {
                         await flutterShortcuts.pushShortcutItem(
-                          shortcut: FlutterShortcutItem(
+                          shortcut: ShortcutItem(
                             id: "5",
                             action: "Play Music Action",
                             shortLabel: "Play Music",
@@ -131,14 +131,14 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Update all shortcuts"),
                       onPressed: () async {
                         await flutterShortcuts.updateShortcutItems(
-                          shortcutList: <FlutterShortcutItem>[
-                            const FlutterShortcutItem(
+                          shortcutList: <ShortcutItem>[
+                            const ShortcutItem(
                               id: "1",
                               action: 'Resume playing Action',
                               shortLabel: 'Resume playing',
                               icon: 'assets/icons/play.png',
                             ),
-                            const FlutterShortcutItem(
+                            const ShortcutItem(
                               id: "2",
                               action: 'Search Songs Action',
                               shortLabel: 'Search Songs',
@@ -157,20 +157,20 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Add Shortcut"),
                       onPressed: () async {
                         await flutterShortcuts.pushShortcutItems(
-                          shortcutList: <FlutterShortcutItem>[
-                            const FlutterShortcutItem(
+                          shortcutList: <ShortcutItem>[
+                            const ShortcutItem(
                               id: "1",
                               action: 'Home page new action',
                               shortLabel: 'Home Page',
                               icon: 'assets/icons/home.png',
                             ),
-                            const FlutterShortcutItem(
+                            const ShortcutItem(
                               id: "2",
                               action: 'Bookmark page new action',
                               shortLabel: 'Bookmark Page',
                               icon: 'assets/icons/bookmark.png',
                             ),
-                            const FlutterShortcutItem(
+                            const ShortcutItem(
                               id: "3",
                               action: 'Settings Action',
                               shortLabel: 'Setting',
@@ -184,7 +184,7 @@ class _MyAppState extends State<MyApp> {
                       child: Text("Update Shortcut with ID"),
                       onPressed: () {
                         flutterShortcuts.updateShortcutItem(
-                          shortcut: FlutterShortcutItem(
+                          shortcut: ShortcutItem(
                             id: "1",
                             action: 'Go to url action',
                             shortLabel: 'Visit Page',
@@ -221,31 +221,44 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ],
                 ),
-                Divider(),
-                // Text("Label"),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton(
-                //       child: Text("Change ShortLabel"),
-                //       onPressed: () async {
-                //         await flutterShortcuts.changeShortcutItemLabel(
-                //           id: "1",
-                //           shortLabel: "Resume Game",
-                //         );
-                //       },
-                //     ),
-                //     ElevatedButton(
-                //       child: Text("Change longLabel"),
-                //       onPressed: () async {
-                //         await flutterShortcuts.changeShortcutItemLabel(
-                //           id: "2",
-                //           longLabel: "Long label for shortcut item with id '2'",
-                //         );
-                //       },
-                //     ),
-                //   ],
-                // ),
+                Text("Conversation Shortcuts"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      child: Text("Set conversation Shortcut"),
+                      onPressed: () async {
+                        await flutterShortcuts.setShortcutItems(
+                          shortcutItems: <ShortcutItem>[
+                            const ShortcutItem(
+                              id: "1",
+                              action: 'open_chat_1',
+                              shortLabel: 'Divyanshu Shekhar',
+                              icon: 'assets/icons/home.png',
+                              conversationShortcut: true,
+                              isImportant: true,
+                            ),
+                            const ShortcutItem(
+                              id: "2",
+                              action: 'oepn_chat_2',
+                              shortLabel: 'Subham Praharaj',
+                              icon: 'assets/icons/bookmark.png',
+                              conversationShortcut: true,
+                            ),
+                            const ShortcutItem(
+                              id: "3",
+                              action: 'oepn_chat_3',
+                              shortLabel: 'Auto Reply Bot',
+                              icon: 'assets/icons/url.png',
+                              conversationShortcut: true,
+                              isBot: true,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

@@ -1,8 +1,8 @@
 arguments=
 auto.sync=false
 build.scans.enabled=false
-connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(6.8))
-connection.project.dir=../example/android
+connection.gradle.distribution=GRADLE_DISTRIBUTION(VERSION(7.1.1))
+connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=
 java.home=C\:/Program Files/AdoptOpenJDK/jdk-15.0.2.7-hotspot

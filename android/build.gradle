@@ -4,25 +4,25 @@ version '1.0'
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:7.0.4'
     }
 }
 
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 16
@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    implementation "androidx.core:core:1.6.0-beta01"
-    implementation 'androidx.core:core-google-shortcuts:1.0.0-beta01'
+    implementation "androidx.core:core:1.8.0-alpha02"
+    implementation 'androidx.core:core-google-shortcuts:1.1.0-alpha01'
 }

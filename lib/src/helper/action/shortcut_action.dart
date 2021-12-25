@@ -8,4 +8,4 @@ for more details.
 
 */
 
-typedef void FlutterShortcutAction(String action);
+typedef void ShortcutAction(String action);
