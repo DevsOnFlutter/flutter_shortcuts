@@ -4,7 +4,7 @@
 
 ![GitHub](https://img.shields.io/github/license/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub top language](https://img.shields.io/github/languages/top/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub language count](https://img.shields.io/github/languages/count/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub issues](https://img.shields.io/github/issues/DevsOnFlutter/flutter_shortcuts?style=plastic) ![GitHub Repo stars](https://img.shields.io/github/stars/DevsOnFlutter/flutter_shortcuts?style=social) ![GitHub forks](https://img.shields.io/github/forks/DevsOnFlutter/flutter_shortcuts?style=social)
 
-##  Compatibility
+## Compatibility
 
 ✅ &nbsp; Android </br>
 ❌ &nbsp; iOS (active issue: [iOS support for quick actions](https://github.com/DevsOnFlutter/flutter_shortcuts/issues/1))
@@ -29,6 +29,7 @@ All the features listed below can be performed at the runtime.
 ✅ &nbsp; Create Shortcuts </br>
 ✅ &nbsp; Clear Shortcuts </br>
 ✅ &nbsp; Update Shortcuts </br>
+✅ &nbsp; Conversation Shortcuts </br>
 ✅ &nbsp; Use both flutter and android asset as shortcut icon </br>
 
 ## Demo
@@ -90,7 +91,7 @@ Flutter Shortcuts allows you to create shortcut icon from both android `drawable
 use: `ShortcutIconAsset.androidAsset`
 
 ```dart
-FlutterShortcutItem(
+ShortcutItem(
   id: "2",
   action: 'Bookmark page action',
   shortLabel: 'Bookmark Page',
@@ -104,7 +105,7 @@ FlutterShortcutItem(
 use: `ShortcutIconAsset.flutterAsset`
 
 ```dart
-FlutterShortcutItem(
+ShortcutItem(
   id: "2",
   action: 'Bookmark page action',
   shortLabel: 'Bookmark Page',
@@ -119,14 +120,14 @@ Publishes the list of shortcuts. All existing shortcuts will be replaced.
 
 ```dart
 flutterShortcuts.setShortcutItems(
-  shortcutItems: <FlutterShortcutItem>[
-    const FlutterShortcutItem(
+  shortcutItems: <ShortcutItem>[
+    const ShortcutItem(
       id: "1",
       action: 'Home page action',
       shortLabel: 'Home Page',
       icon: 'assets/icons/home.png',
     ),
-    const FlutterShortcutItem(
+    const ShortcutItem(
       id: "2",
       action: 'Bookmark page action',
       shortLabel: 'Bookmark Page',
@@ -151,7 +152,7 @@ Push a new shortcut item. If there is already a dynamic or pinned shortcut with 
 
 ```dart
 flutterShortcuts.pushShortcutItem(
-  shortcut: FlutterShortcutItem(
+  shortcut: ShortcutItem(
     id: "5",
     action: "Play Music Action",
     shortLabel: "Play Music",
@@ -166,20 +167,20 @@ Pushes a list of shortcut item. If there is already a dynamic or pinned shortcut
 
 ```dart
 flutterShortcuts.pushShortcutItems(
-  shortcutList: <FlutterShortcutItem>[
-    const FlutterShortcutItem(
+  shortcutList: <ShortcutItem>[
+    const ShortcutItem(
       id: "1",
       action: 'Home page new action',
       shortLabel: 'Home Page',
       icon: 'assets/icons/home.png',
     ),
-    const FlutterShortcutItem(
+    const ShortcutItem(
       id: "2",
       action: 'Bookmark page new action',
       shortLabel: 'Bookmark Page',
       icon: 'assets/icons/bookmark.png',
     ),
-    const FlutterShortcutItem(
+    const ShortcutItem(
       id: "3",
       action: 'Settings Action',
       shortLabel: 'Setting',
@@ -195,7 +196,7 @@ Updates a single shortcut item based on id. If the ID of the shortcut is not sam
 
 ```dart
 flutterShortcuts.updateShortcutItem(
-  shortcut: FlutterShortcutItem(
+  shortcut: ShortcutItem(
     id: "1",
     action: 'Go to url action',
     shortLabel: 'Visit Page',
@@ -210,18 +211,54 @@ flutterShortcuts.updateShortcutItem(
 
  ```dart
 flutterShortcuts.updateShortcutItems(
-  shortcutList: <FlutterShortcutItem>[
-    const FlutterShortcutItem(
+  shortcutList: <ShortcutItem>[
+    const ShortcutItem(
       id: "1",
       action: 'Resume playing Action',
       shortLabel: 'Resume playing',
       icon: 'assets/icons/play.png',
     ),
-    const FlutterShortcutItem(
+    const ShortcutItem(
       id: "2",
       action: 'Search Songs Action',
       shortLabel: 'Search Songs',
       icon: 'assets/icons/search.png',
+    ),
+  ],
+);
+ ```
+
+### Set Conversation Shortcut
+
+Set `conversationShortcut: true` in ShortcutItem to make the shortcut as conversation shortcut.
+
+The conversation shortcut can also be set as important and bot by setting `isImportant: true` & `isBot: true`.
+
+ ```dart
+await flutterShortcuts.pushShortcutItems(
+  shortcutList: <ShortcutItem>[
+    const ShortcutItem(
+      id: "1",
+      action: 'open_chat_1',
+      shortLabel: 'Divyanshu Shekhar',
+      icon: 'assets/icons/home.png',
+      conversationShortcut: true,
+      isImportant: true,
+    ),
+    const ShortcutItem(
+      id: "2",
+      action: 'oepn_chat_2',
+      shortLabel: 'Subham Praharaj',
+      icon: 'assets/icons/bookmark.png',
+      conversationShortcut: true,
+    ),
+    const ShortcutItem(
+      id: "3",
+      action: 'oepn_chat_3',
+      shortLabel: 'Auto Reply Bot',
+      icon: 'assets/icons/url.png',
+      conversationShortcut: true,
+      isBot: true,
     ),
   ],
 );
@@ -291,4 +328,4 @@ Describe the use-case.
 
 ## Copyright & License
 
-Code and documentation Copyright (c) 2021 [Divyanshu Shekhar](https://divyanshushekhar.com). Code released under the [BSD 3-Clause License](./LICENSE).
+Code and documentation Copyright (c) 2021 [Divyanshu Shekhar](https://hackthedeveloper.com). Code released under the [BSD 3-Clause License](./LICENSE).

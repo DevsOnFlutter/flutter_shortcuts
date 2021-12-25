@@ -1,3 +1,11 @@
+## v1.3.0
+
+* **Breaking Change** renamed `FlutterShortcutsItem` to `ShortcutItem`
+* Extra fields added in ShortcutItem
+* `(bool) conversationShortcut` make conversation shortcuts
+* `(bool) isImportant` set conversation shortcut importance
+* `(bool) isBot` set is conversation shortcut bot
+
 ## v1.2.2
 
 * Compatibility added in Readme
