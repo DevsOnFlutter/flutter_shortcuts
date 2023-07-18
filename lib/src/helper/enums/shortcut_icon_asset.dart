@@ -14,4 +14,15 @@ enum ShortcutIconAsset {
 
   /// Creates Icon from the flutter resources `assets/icons/flutter.png`.
   flutterAsset,
+
+  /// Creates Icon from base64 **JPEG** image.
+  ///
+  /// You can use helper function like so:
+  /// ```dart
+  /// Uint8List bytes = ...;
+  ///
+  /// // Pass this string to [icon]
+  /// ShortcutMemoryIcon(bytes).toString()
+  /// ```
+  memoryAsset,
 }
