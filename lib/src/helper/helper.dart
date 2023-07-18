@@ -10,4 +10,5 @@ for more details.
 
 export 'action/shortcut_action.dart';
 export 'model/shortcut_item.dart';
+export 'model/shortcut_memory_icon.dart';
 export 'enums/shortcut_icon_asset.dart';
