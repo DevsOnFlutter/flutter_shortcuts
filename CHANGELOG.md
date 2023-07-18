@@ -1,3 +1,7 @@
+## v1.4.0
+
+* **New Feature** Generate icon from JPEG images in memory (Uint8List) `ShortcutIconAsset.memoryAsset`
+
 ## v1.3.0
 
 * **Breaking Change** renamed `FlutterShortcutsItem` to `ShortcutItem`
