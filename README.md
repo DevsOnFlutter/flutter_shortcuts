@@ -15,12 +15,12 @@
 
 Flutter Shortcuts Plugin is known for :
 
-| Flutter Shortcuts |
-| :--------------------------------- |
+| Flutter Shortcuts             |
+| :---------------------------- |
 | Fast, performant & compatible |
-| Free & Open-source |
-| Production ready | 
-| Make App Reactive |
+| Free & Open-source            |
+| Production ready              |
+| Make App Reactive             |
 
 ## Features
 
@@ -34,8 +34,8 @@ All the features listed below can be performed at the runtime.
 
 ## Demo
 
-|<img height=500 src="https://i.imgur.com/UPcyPEl.gif"/>|
-|---|
+| <img height=500 src="https://i.imgur.com/UPcyPEl.gif"/> |
+| ------------------------------------------------------- |
 
 ## Quick Start
 
@@ -88,31 +88,49 @@ Flutter Shortcuts allows you to create shortcut icon from both android `drawable
 
 * If you want to use icon from Android resources, `drawable` or `mipmap`.
 
-use: `ShortcutIconAsset.androidAsset`
+  use: `ShortcutIconAsset.androidAsset`
 
-```dart
-ShortcutItem(
-  id: "2",
-  action: 'Bookmark page action',
-  shortLabel: 'Bookmark Page',
-  icon: "ic_launcher",
-  shortcutIconAsset: ShortcutIconAsset.androidAsset,
-),
+  ```dart
+  ShortcutItem(
+    id: "2",
+    action: 'Bookmark page action',
+    shortLabel: 'Bookmark Page',
+    icon: "ic_launcher",
+    shortcutIconAsset: ShortcutIconAsset.androidAsset,
+  ),
 ```
 
 * If you want to create shortcut icon from flutter asset. (DEFAULT)
 
-use: `ShortcutIconAsset.flutterAsset`
+  use: `ShortcutIconAsset.flutterAsset`
 
-```dart
-ShortcutItem(
-  id: "2",
-  action: 'Bookmark page action',
-  shortLabel: 'Bookmark Page',
-  icon: 'assets/icons/bookmark.png',
-  shortcutIconAsset: ShortcutIconAsset.flutterAsset,
-),
-```
+  ```dart
+  ShortcutItem(
+    id: "2",
+    action: 'Bookmark page action',
+    shortLabel: 'Bookmark Page',
+    icon: 'assets/icons/bookmark.png',
+    shortcutIconAsset: ShortcutIconAsset.flutterAsset,
+  ),
+  ```
+
+* If you want to create shortcut icon from memory (`Uint8List`).
+
+  **This only works with JPEG images**!
+
+  use: `ShortcutIconAsset.memoryAsset`
+
+  ```dart
+  Unit8List jpegData = ...; // JPEG image in memory
+
+  ShortcutItem(
+    id: "2",
+    action: 'Bookmark page action',
+    shortLabel: 'Bookmark Page',
+    icon: ShortcutMemoryIcon(jpegData).toList(),
+    shortcutIconAsset: ShortcutIconAsset.flutterAsset,
+  ),
+  ```
 
 ### Set shortcut items
 

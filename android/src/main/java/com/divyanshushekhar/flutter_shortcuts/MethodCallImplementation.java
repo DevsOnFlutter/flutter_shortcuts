@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Base64;
 
 import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.loader.FlutterLoader;
@@ -394,6 +395,9 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             case 1:
                 setIconFromFlutterCompat(shortcutBuilderCompat, icon);
                 break;
+            case 2:
+                setIconFromBase64StringCompat(shortcutBuilderCompat, icon);
+                break;
             default:
                 break;
         }
@@ -414,16 +418,26 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
         }
     }
 
+    private void setIconFromBase64StringCompat(ShortcutInfoCompat.Builder shortcutBuilder, String icon) {
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            shortcutBuilder.setIcon(IconCompat.createFromIcon(context, getIconFromMemoryAsset(context, icon)));
+        }
+    }
+
     /* *********************** Person ******************* */
     private void setIconCompat(int iconType,String icon,Person.Builder personBuilderCompat) {
         // 0 - ShortcutIconType.androidAsset
         // 1 - ShortcutIconType.flutterAsset
+        // 2 - ShortcutIconType.memoryAsset
         switch (iconType) {
             case 0:
                 setIconFromNativeCompat(personBuilderCompat, icon);
                 break;
             case 1:
                 setIconFromFlutterCompat(personBuilderCompat, icon);
+                break;
+            case 2:
+                setIconFromBase64StringCompat(personBuilderCompat, icon);
                 break;
             default:
                 break;
@@ -442,6 +456,12 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
     private void setIconFromFlutterCompat(Person.Builder personBuilder, String icon) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             personBuilder.setIcon(IconCompat.createFromIcon(context,getIconFromFlutterAsset(context,icon)));
+        }
+    }
+
+    private void setIconFromBase64StringCompat(Person.Builder personBuilder, String icon) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            personBuilder.setIcon(IconCompat.createFromIcon(context,getIconFromMemoryAsset(context,icon)));
         }
     }
 
@@ -464,6 +484,19 @@ public class MethodCallImplementation implements MethodChannel.MethodCallHandler
             e.printStackTrace();
         }
         return Icon.createWithAdaptiveBitmap(image);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private Icon getIconFromMemoryAsset(Context context, String base64Jpeg) {
+        try {
+            byte[] bytes = Base64.getDecoder().decode(base64Jpeg);
+            Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+            return Icon.createWithAdaptiveBitmap(image);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private int loadResourceId(Context context, String icon) {
